@@ -42,31 +42,29 @@ export class SmartLinkScraper {
       console.warn('[Live Scraper Note]', err.message);
     }
 
-    let title = (liveData && liveData.title && !this.isBotBlocked(liveData.title))
+    const title = (liveData && liveData.title && !this.isBotBlocked(liveData.title))
       ? liveData.title
       : urlInfo.title;
 
-    let price = (liveData && liveData.price && liveData.price > 2.50)
+    const price = (liveData && liveData.price && liveData.price > 0)
       ? liveData.price
       : urlInfo.price;
 
-    let externalId = (liveData && liveData.externalId) ? liveData.externalId : urlInfo.externalId;
+    const externalId = (liveData && liveData.externalId) ? liveData.externalId : urlInfo.externalId;
 
-    let images = (liveData && liveData.images && liveData.images.length > 0)
+    const images = (liveData && liveData.images && liveData.images.length > 0)
       ? liveData.images
-      : this.getCategoryImages(title, store);
+      : [];
 
-    let variants: ProductVariants = (liveData && liveData.variants && Object.keys(liveData.variants).length > 0)
+    const variants: ProductVariants = (liveData && liveData.variants && Object.keys(liveData.variants).length > 0)
       ? liveData.variants
       : urlInfo.variants;
 
-    const description = `Article authentique "${title}". Importé et garanti par AYROVI.`;
-
     const rate = SmartLinkScraper.RATES_TO_TND[currency] || 4.00;
-    const convertedPriceTND = Math.round(price * rate * 100) / 100;
-    const serviceFeeTND = Math.round((Math.max(10, convertedPriceTND * 0.08)) * 100) / 100;
-    const estimatedShippingTND = 25.00;
-    const totalPriceTND = Math.round((convertedPriceTND + serviceFeeTND + estimatedShippingTND) * 100) / 100;
+    const convertedPriceTND = price > 0 ? Math.round(price * rate * 100) / 100 : 0;
+    const serviceFeeTND = price > 0 ? Math.round((Math.max(10, convertedPriceTND * 0.08)) * 100) / 100 : 0;
+    const estimatedShippingTND = price > 0 ? 25.00 : 0;
+    const totalPriceTND = price > 0 ? Math.round((convertedPriceTND + serviceFeeTND + estimatedShippingTND) * 100) / 100 : 0;
 
     return {
       id: 'scraped_' + Date.now(),
@@ -75,9 +73,9 @@ export class SmartLinkScraper {
       url: cleanUrl,
       externalId,
       title: title.trim(),
-      description,
+      description: `Article extrait depuis ${storeName}. Vérifié par AYROVI.`,
       images,
-      mainImage: images[0],
+      mainImage: images.length > 0 ? images[0] : '',
       sourcePrice: Math.round(price * 100) / 100,
       sourceCurrency: currency,
       convertedPriceTND,
@@ -87,8 +85,6 @@ export class SmartLinkScraper {
       variants,
       availability: 'in_stock',
       brand: urlInfo.brand || storeName.split(' ')[0],
-      rating: 4.8,
-      reviewsCount: Math.floor(Math.random() * 800 + 400),
       scrapedAt: new Date().toISOString()
     };
   }
@@ -154,22 +150,14 @@ export class SmartLinkScraper {
           }
         });
 
-        let price = 20.49;
-        const lower = formatted.toLowerCase();
-        if (lower.includes('muchica') || lower.includes('2-piece') || lower.includes('set')) {
-          price = 21.99;
-        } else if (lower.includes('slaydiva') || goodsId === '9842') {
-          price = 20.49;
-        }
-
         return {
           title,
           brand,
-          price,
+          price: 0,
           externalId: `SH-${goodsId}`,
           variants: {
-            sizes: ['XS (34)', 'S (36)', 'M (38)', 'L (40)', 'XL (42)', '2XL (44)'],
-            colors: colors.length > 0 ? colors : ['Couleur Principale', 'Noir Ébène', 'Beige Sable']
+            sizes: ['S', 'M', 'L', 'XL'],
+            colors: colors.length > 0 ? colors : []
           }
         };
       }
@@ -183,16 +171,16 @@ export class SmartLinkScraper {
           titleSlug = decodeURIComponent(parts[0]).replace(/-/g, ' ');
         }
 
-        const title = titleSlug.length > 3 ? titleSlug : 'Produit Amazon Original';
+        const title = titleSlug.length > 3 ? titleSlug : 'Produit Amazon';
 
         return {
           title,
           brand: 'Amazon',
-          price: 29.99,
+          price: 0,
           externalId: asin,
           variants: {
-            sizes: ['Standard', 'Édition Spéciale'],
-            colors: ['Noir', 'Blanc', 'Gris']
+            sizes: [],
+            colors: []
           }
         };
       }
@@ -214,11 +202,11 @@ export class SmartLinkScraper {
         return {
           title: `TEMU — ${title}`,
           brand: 'TEMU',
-          price: 14.98,
+          price: 0,
           externalId: `TEMU-${id}`,
           variants: {
-            sizes: ['Taille Unique', 'Pack 2x'],
-            colors: ['Noir', 'Bleu', 'Rose']
+            sizes: [],
+            colors: []
           }
         };
       }
@@ -227,58 +215,13 @@ export class SmartLinkScraper {
     return {
       title: 'Article Boutique Internationale',
       brand: 'Boutique',
-      price: 20.00,
+      price: 0,
       externalId: 'ITEM-' + Math.floor(Math.random() * 899999 + 100000),
       variants: {
-        sizes: ['S', 'M', 'L', 'XL'],
-        colors: ['Standard']
+        sizes: [],
+        colors: []
       }
     };
-  }
-
-  private getCategoryImages(title: string, _store: StoreType): string[] {
-    const t = title.toLowerCase();
-
-    if (t.includes('2-piece') || t.includes('set') || t.includes('ensemble') || t.includes('matching') || t.includes('knitted') || t.includes('muchica') || t.includes('pants')) {
-      return [
-        'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=800&auto=format&fit=crop&q=80'
-      ];
-    }
-    if (t.includes('robe') || t.includes('dress') || t.includes('slaydiva')) {
-      return [
-        'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=800&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1566174053879-31528523f8ae?w=800&auto=format&fit=crop&q=80'
-      ];
-    }
-    if (t.includes('sac') || t.includes('bag') || t.includes('tote')) {
-      return [
-        'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&auto=format&fit=crop&q=80'
-      ];
-    }
-    if (t.includes('veste') || t.includes('jacket') || t.includes('blazer')) {
-      return [
-        'https://images.unsplash.com/photo-1544441893-675973e31985?w=800&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&auto=format&fit=crop&q=80'
-      ];
-    }
-    if (t.includes('montre') || t.includes('watch')) {
-      return [
-        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80'
-      ];
-    }
-    if (t.includes('airpods') || t.includes('earbuds') || t.includes('casque')) {
-      return [
-        'https://m.media-amazon.com/images/I/61f1YfTkTDL._AC_SL1500_.jpg'
-      ];
-    }
-
-    return [
-      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80'
-    ];
   }
 
   private async scrapeWithPuppeteer(url: string, storeType: StoreType): Promise<any> {
@@ -373,14 +316,14 @@ export class SmartLinkScraper {
 
   private getStoreDisplayName(store: StoreType, url: string): string {
     if (store === 'amazon') {
-      if (url.includes('.co.jp')) return 'Amazon Japan 🇯🇵';
-      if (url.includes('.fr')) return 'Amazon France 🇫🇷';
-      if (url.includes('.com') && !url.includes('/fr/')) return 'Amazon USA 🇺🇸';
-      return 'Amazon Global';
+      if (url.includes('.co.jp')) return 'Amazon Japan';
+      if (url.includes('.fr')) return 'Amazon France';
+      if (url.includes('.com') && !url.includes('/fr/')) return 'Amazon USA';
+      return 'Amazon';
     }
-    if (store === 'shein') return 'SHEIN 👗';
-    if (store === 'temu') return 'TEMU 🛍️';
-    if (store === 'aliexpress') return 'AliExpress ⚡';
+    if (store === 'shein') return 'SHEIN';
+    if (store === 'temu') return 'TEMU';
+    if (store === 'aliexpress') return 'AliExpress';
     return 'Boutique Internationale';
   }
 

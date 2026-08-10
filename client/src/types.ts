@@ -1,0 +1,64 @@
+export type StoreType = 'amazon' | 'shein' | 'temu' | 'aliexpress' | 'generic';
+
+export interface ProductVariants {
+  sizes?: string[];
+  colors?: string[];
+  styles?: string[];
+  options?: string[];
+}
+
+export interface ScrapedProduct {
+  id: string;
+  store: StoreType;
+  storeName: string;
+  url: string;
+  externalId: string | null;
+  title: string;
+  description: string | null;
+  images: string[];
+  mainImage: string;
+  sourcePrice: number;
+  sourceCurrency: string;
+  convertedPriceTND: number;
+  estimatedShippingTND: number;
+  serviceFeeTND: number;
+  totalPriceTND: number;
+  variants: ProductVariants;
+  selectedVariant?: string | null;
+  availability: 'in_stock' | 'limited' | 'out_of_stock';
+  brand: string | null;
+  scrapedAt: string;
+}
+
+export interface CartItem {
+  id: string;
+  sessionId: string;
+  store: string;
+  externalId: string | null;
+  sourceUrl: string;
+  title: string;
+  imageUrl: string;
+  sourcePrice: number;
+  sourceCurrency: string;
+  priceTND: number;
+  variant: string | null;
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CustomerInfo {
+  name: string;
+  phone: string;
+  city: string;
+  address: string;
+  paymentMethod: string;
+}
+
+export interface OrderResult {
+  orderNumber: string;
+  customer: CustomerInfo;
+  totalTND: number;
+  itemCount: number;
+  message: string;
+}

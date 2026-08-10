@@ -8,7 +8,7 @@ export class VisualProductExtractor {
   public static readonly RATES_TO_TND: Record<string, number> = {
     EUR: 4.00,
     USD: 4.00,
-    JPY: 0.0265,
+    JPY: 0.0265, // 100 JPY = 2.65 TND
     GBP: 4.80,
     CAD: 2.95,
     CHF: 4.20,
@@ -44,10 +44,10 @@ export class VisualProductExtractor {
       : this.extractTitleFromText(text, storeName);
 
     const rate = VisualProductExtractor.RATES_TO_TND[currency] || 4.00;
-    const convertedPriceTND = Math.round(price * rate * 100) / 100;
-    const serviceFeeTND = Math.round((Math.max(10, convertedPriceTND * 0.08)) * 100) / 100;
-    const estimatedShippingTND = 25.00;
-    const totalPriceTND = Math.round((convertedPriceTND + serviceFeeTND + estimatedShippingTND) * 100) / 100;
+    const convertedPriceTND = price > 0 ? Math.round(price * rate * 100) / 100 : 0;
+    const serviceFeeTND = price > 0 ? Math.round((Math.max(10, convertedPriceTND * 0.08)) * 100) / 100 : 0;
+    const estimatedShippingTND = price > 0 ? 25.00 : 0;
+    const totalPriceTND = price > 0 ? Math.round((convertedPriceTND + serviceFeeTND + estimatedShippingTND) * 100) / 100 : 0;
 
     const imageUrl = `/uploads/${filename}`;
 
@@ -60,7 +60,7 @@ export class VisualProductExtractor {
       title: title.trim(),
       description: isCartScreenshot
         ? `Total réel de la commande extrait depuis la capture du panier (${price} ${currency} = ${totalPriceTND} DT).`
-        : `Article extrait avec le prix original non remisé (${price} ${currency}). Vérifié par AYROVI.`,
+        : `Article extrait avec le prix original (${price > 0 ? `${price} ${currency}` : 'À préciser'}). Vérifié par AYROVI.`,
       images: [imageUrl],
       mainImage: imageUrl,
       sourcePrice: price,
@@ -70,13 +70,11 @@ export class VisualProductExtractor {
       estimatedShippingTND,
       totalPriceTND,
       variants: {
-        sizes: ['Standard / Original', 'S', 'M', 'L', 'XL'],
-        colors: ['Couleur de la photo (Original)']
+        sizes: [],
+        colors: []
       },
       availability: 'in_stock',
       brand: storeName.split(' ')[0],
-      rating: 4.9,
-      reviewsCount: 1500,
       scrapedAt: new Date().toISOString()
     };
   }
@@ -89,7 +87,8 @@ export class VisualProductExtractor {
       lower.includes('sub total') ||
       lower.includes('desired quantity') ||
       lower.includes('total de la commande') ||
-      lower.includes('recapitulatif')
+      lower.includes('recapitulatif') ||
+      lower.includes('grand total')
     );
   }
 
@@ -103,10 +102,10 @@ export class VisualProductExtractor {
   }
 
   private getStoreDisplayName(store: StoreType): string {
-    if (store === 'shein') return 'SHEIN 👗';
-    if (store === 'amazon') return 'Amazon 📦';
-    if (store === 'temu') return 'TEMU 🛍️';
-    if (store === 'aliexpress') return 'AliExpress ⚡';
+    if (store === 'shein') return 'SHEIN';
+    if (store === 'amazon') return 'Amazon';
+    if (store === 'temu') return 'TEMU';
+    if (store === 'aliexpress') return 'AliExpress';
     return 'Boutique Internationale';
   }
 
@@ -131,10 +130,10 @@ export class VisualProductExtractor {
       }
     }
 
-    return { price: 3423, currency: 'JPY' };
+    return { price: 0, currency };
   }
 
-  private extractOriginalPriceFromText(text: string, store: StoreType): { price: number; currency: string } {
+  private extractOriginalPriceFromText(text: string, _store: StoreType): { price: number; currency: string } {
     let currency = 'EUR';
 
     if (text.includes('¥') || text.includes('円') || text.includes('YEN') || text.includes('amazon.co.jp')) {
@@ -186,14 +185,11 @@ export class VisualProductExtractor {
       return { price: Math.max(...detectedPrices), currency };
     }
 
-    return {
-      price: store === 'shein' ? 20.49 : (store === 'amazon' ? 249.00 : 14.98),
-      currency
-    };
+    return { price: 0, currency };
   }
 
   private extractTitleFromText(text: string, storeName: string): string {
-    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 5);
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 3);
 
     for (const line of lines) {
       const lower = line.toLowerCase();
@@ -212,7 +208,7 @@ export class VisualProductExtractor {
         lower.includes('ensemble')
       ) {
         if (!line.includes('The page') && !line.includes('http') && !line.includes('says:')) {
-          return line.replace(/^[^\w\s\u0600-\u06FF]+/g, '').trim();
+          return line.replace(/^[^\w\s\u0600-\u06FF\-]+/g, '').trim();
         }
       }
     }
@@ -223,6 +219,6 @@ export class VisualProductExtractor {
       }
     }
 
-    return `Article extrait depuis ${storeName}`;
+    return `طلب شراء من ${storeName}`;
   }
 }

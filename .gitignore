@@ -1,6 +1,13 @@
 node_modules/
 .cache/
+.npm/
 dist/
 *.zip
 .arena/
-.git/
+.env
+data/uploads/
+data/*.sqlite*
+uploads/
+.config/
+.local/
+*.traineddata
