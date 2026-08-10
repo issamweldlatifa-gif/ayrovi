@@ -1,0 +1,42 @@
+{
+  "name": "ayrovi",
+  "version": "2.5.0",
+  "description": "AYROVI — Universal Cross-Border Shopping & Visual AI Platform",
+  "main": "dist/server.js",
+  "scripts": {
+    "start": "node dist/server.js",
+    "dev": "npm run build && node dist/server.js",
+    "build": "node -e 'require(\"esbuild\").buildSync({entryPoints:[\"src/server.ts\"],bundle:true,platform:\"node\",target:\"node20\",outfile:\"dist/server.js\",external:[\"better-sqlite3\",\"jsdom\",\"express\",\"cors\",\"uuid\",\"dotenv\",\"puppeteer\",\"puppeteer-extra\",\"puppeteer-extra-plugin-stealth\",\"tesseract.js\",\"multer\"]})'",
+    "test": "vitest run"
+  },
+  "keywords": ["ayrovi", "e-commerce", "proxy-shopping", "vision-ocr", "screenshot-scraper", "tunisia"],
+  "author": "AYROVI Team",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "esbuild": "^0.20.2",
+    "express": "^4.19.2",
+    "jsdom": "^24.0.0",
+    "multer": "^1.4.5-lts.1",
+    "puppeteer": "^22.6.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "tesseract.js": "^5.0.5",
+    "typescript": "^5.4.5",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.10",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsdom": "^21.1.6",
+    "@types/multer": "^1.4.11",
+    "@types/node": "^20.12.7",
+    "@types/supertest": "^6.0.2",
+    "@types/uuid": "^9.0.8",
+    "supertest": "^6.3.4",
+    "vitest": "^4.1.10"
+  }
+}

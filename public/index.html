@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>AYROVI — اشترِ من Amazon و SHEIN و TEMU واستلم في تونس</title>
+  <link rel="stylesheet" href="app.css?v=20260810_ayrovi">
+  <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23ea580c'/><text x='50%' y='68%' font-family='Arial' font-weight='900' font-size='65' fill='%23fff' text-anchor='middle'>A</text></svg>">
+  <style>
+    .input-mode-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 16px; }
+    .mode-tab-btn { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted); padding: 8px 18px; border-radius: 20px; font-size: 13.5px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .mode-tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    
+    .screenshot-dropzone { border: 2px dashed #ea580c; background: rgba(234, 88, 12, 0.05); border-radius: 16px; padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .screenshot-dropzone:hover { background: rgba(234, 88, 12, 0.1); border-color: #ff7700; }
+    .dropzone-icon { font-size: 40px; margin-bottom: 8px; }
+    .dropzone-title { font-size: 16px; font-weight: 800; color: #ffffff; margin-bottom: 4px; }
+    .dropzone-sub { font-size: 12.5px; color: #94a3b8; }
+    .file-hidden-input { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-box">
+        <a href="/" class="brand-link">
+          <div class="logo-circle">A</div>
+          <div class="brand-text">
+            <span class="brand-title">AYROVI</span>
+            <span class="brand-slogan">سعر الصرف الموحد: 1 يورو/دولار = 4.00 د.ت</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="header-nav">
+        <a href="/cart" class="btn-cart-header">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-label">السلة الموحدة</span>
+          <span class="cart-badge" id="cart-count-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-tag">📸 الاستخراج البصري بالسعر الأصلي (1 EUR/USD = 4.00 DT)</div>
+      <h1 class="hero-title">ارفع لقطة الشاشة (Screenshot) أو الصق الرابط</h1>
+      <p class="hero-subtitle">
+        التقط لقطة شاشة من تطبيق <strong>SHEIN</strong> أو <strong>Amazon</strong> أو <strong>TEMU</strong> أو الصق الرابط، وسيقوم الذكاء الاصطناعي باستخراج السعر الأصلي غير المخفض وحساب التكلفة بالدينار التونسي (4 دنانير لكل 1 يورو/دولار).
+      </p>
+
+      <!-- Input Mode Switcher -->
+      <div class="input-mode-tabs">
+        <button class="mode-tab-btn active" id="tab-btn-image" onclick="window.switchMode('image')">📸 رفع لقطة شاشة (Screenshot) — أدق وأسرع</button>
+        <button class="mode-tab-btn" id="tab-btn-url" onclick="window.switchMode('url')">🔗 لصق الرابط المباشر</button>
+      </div>
+
+      <!-- Option 1: Screenshot Vision Dropzone -->
+      <div id="mode-image-box">
+        <div class="screenshot-dropzone" onclick="document.getElementById('screenshot-file-input').click()">
+          <input type="file" id="screenshot-file-input" class="file-hidden-input" accept="image/*" onchange="window.handleImageUpload(this)">
+          <div class="dropzone-icon">📸</div>
+          <div class="dropzone-title">اضغط هنا لاختيار لقطة الشاشة (Screenshot) من معرض الصور بالهاتف</div>
+          <div class="dropzone-sub">يدعم صور SHEIN، أمازون، تيمو، أو صورة سلة المشتريات (JPG, PNG, WebP)</div>
+        </div>
+      </div>
+
+      <!-- Option 2: URL Scraper Box -->
+      <div id="mode-url-box" style="display: none;">
+        <div class="scraper-box">
+          <div class="scraper-input-wrapper">
+            <span class="search-icon">🔗</span>
+            <input type="text" id="url-input" class="scraper-input" placeholder="الصق رابط السلعة هنا...">
+            <button id="btn-scrape" class="btn-primary-scrape" onclick="window.handleScrapeClick()">
+              <span id="btn-scrape-spinner" class="spinner" style="display: none;"></span>
+              <span id="btn-scrape-text">⚡ استخراج السلعة</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Supported Stores Badges -->
+      <div class="stores-supported-row" style="margin-top: 18px;">
+        <span class="stores-label">متوافق مع لقطات شاشة جميع المتاجر:</span>
+        <div class="stores-pills">
+          <span class="store-pill shein-pill">👗 SHEIN</span>
+          <span class="store-pill amazon-pill">📦 Amazon</span>
+          <span class="store-pill temu-pill">🛍️ TEMU</span>
+          <span class="store-pill ali-pill">⚡ AliExpress / Zara / Nike</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content: Dynamic Extracted Product View -->
+  <main class="main-container">
+
+    <!-- Loading State Skeleton -->
+    <div id="loading-card" class="loading-card" style="display: none;">
+      <div class="spinner-large"></div>
+      <h3>جاري فحص لقطة الشاشة واستخراج السعر الأصلي غير المخفض...</h3>
+      <p>يتم مسح النص بالذكاء الاصطناعي (OCR) وحساب التكلفة بسعر الصرف 4 دنانير</p>
+    </div>
+
+    <!-- Extracted Product Card -->
+    <section id="product-card-section" class="product-result-card" style="display: none;">
+      <div class="product-card-grid">
+        
+        <!-- Gallery Column -->
+        <div class="product-gallery">
+          <div class="main-img-box">
+            <img id="res-main-img" src="" alt="صورة المنتج">
+            <span class="verified-tag">✓ تم الاستخراج بالسعر الأصلي</span>
+          </div>
+        </div>
+
+        <!-- Details Column -->
+        <div class="product-info-col">
+          <div class="store-badge-row">
+            <span class="badge-store" id="res-store-badge">SHEIN</span>
+            <span class="badge-stock" id="res-stock-badge">✓ تم التعرف على السلعة</span>
+          </div>
+
+          <h2 class="product-main-title" id="res-title">عنوان المنتج</h2>
+          <p class="product-desc-text" id="res-desc">الوصف...</p>
+
+          <!-- Transparent Price Box in TND (Rate = 4.00 DT) -->
+          <div class="price-calculation-card">
+            <div class="price-source-row">
+              <span class="price-source-label">السعر الأصلي غير المخفض (أو مجموع السلة):</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="number" step="0.01" id="res-source-price-input" style="background:#1e293b; border:2px solid #ea580c; color:#ffffff; font-weight:900; font-size:16px; padding:6px 12px; border-radius:8px; width:110px;" oninput="window.recalcTotalTND()">
+                <span class="price-source-val" id="res-source-currency" style="font-weight:900; color:#fb923c; font-size:15px;">EUR</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="price-tnd-total-row">
+              <div class="tnd-left">
+                <span class="tnd-label">المبلغ الإجمالي بالدينار التونسي (صرف 4.00 DT):</span>
+                <span class="tnd-sublabel">(ثمن السلعة الأصلي + مصاريف الشحن الدولي والديوانة + التوصيل في تونس)</span>
+              </div>
+              <div class="tnd-price-tag" id="res-total-tnd">0.00 DT</div>
+            </div>
+          </div>
+
+          <!-- Options & Variants Selection (Sizes / Colors) -->
+          <div class="variants-selection-box" id="res-variants-box">
+            <div class="variant-group" id="res-sizes-group">
+              <label class="variant-label">اختر المقاس المطلوب :</label>
+              <div class="swatches-list" id="res-sizes-list"></div>
+            </div>
+
+            <div class="variant-group" id="res-colors-group">
+              <label class="variant-label">اختر اللون / الموديل :</label>
+              <div class="swatches-list" id="res-colors-list"></div>
+            </div>
+          </div>
+
+          <!-- Quantity Selector -->
+          <div class="quantity-row">
+            <label class="qty-label">الكمية المطلوبة:</label>
+            <div class="qty-counter">
+              <button class="qty-btn" onclick="window.modifyQuantity(-1)">-</button>
+              <span class="qty-number" id="res-qty-val">1</span>
+              <button class="qty-btn" onclick="window.modifyQuantity(1)">+</button>
+            </div>
+          </div>
+
+          <!-- Add to Cart & Buy CTA -->
+          <div class="cta-actions-row">
+            <button class="btn-add-to-cart" id="btn-add-cart" onclick="window.addToCartAction()">
+              <span class="icon">🛒</span>
+              <span>أضف إلى سلة AYROVI وتأكيد الشراء</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- How It Works Steps -->
+    <section class="how-it-works-section">
+      <h2 class="section-heading">كيف تشتري أي سلعة من الخارج عبر AYROVI؟</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">1</div>
+          <div class="step-icon">📱</div>
+          <h3>خذ لقطة شاشة (Screenshot)</h3>
+          <p>أثناء تصفحك لتطبيق SHEIN أو أمازون على هاتفك، خذ لقطة شاشة للسلعة أو سلة المشتريات.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">2</div>
+          <div class="step-icon">⚡</div>
+          <h3>ارفع الصورة في AYROVI</h3>
+          <p>يقوم الذكاء الاصطناعي باستخراج السعر الأصلي الحقيقي وحساب التكلفة بصرف 4 دنانير.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">3</div>
+          <div class="step-icon">📦</div>
+          <h3>استلم طلبك في تونس</h3>
+          <p>نقوم بشراء السلعة بالعملة الصعبة نيابة عنك وشحنها وتخليصها ديوانياً حتى باب منزلك.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Success Toast Modal -->
+  <div id="toast-modal" class="toast-backdrop" style="display: none;">
+    <div class="toast-card">
+      <div class="toast-check-icon">✓</div>
+      <h3>تمت إضافة المنتج بنجاح إلى سلتك!</h3>
+      <p id="toast-product-title">اسم المنتج...</p>
+      
+      <div class="toast-buttons">
+        <a href="/cart" class="btn-toast-checkout">🛒 الذهاب إلى السلة وإتمام الطلب ➔</a>
+        <button class="btn-toast-continue" onclick="window.closeToastModal()">إضافة صورة سلعة أخرى</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>© 2026 AYROVI — المنصة التونسية الأولى للشراء الذكي من المتاجر العالمية.</p>
+      <div class="footer-links">
+        <a href="/cart">سلة المشتريات</a> • 
+        <a href="/api/health" target="_blank">حالة السيرفر والـ API</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Inline Core Engine -->
+  <script>
+    var currentScrapedProduct = null;
+    var selectedProductSize = 'M (38)';
+    var selectedProductColor = 'Couleur de la photo';
+    var currentItemQuantity = 1;
+
+    function getUserSessionId() {
+      try {
+        var s = localStorage.getItem('ayrovi_user_session_id');
+        if (!s) {
+          s = 'ayr_' + Math.random().toString(36).substring(2, 12);
+          localStorage.setItem('ayrovi_user_session_id', s);
+        }
+        return s;
+      } catch (e) {
+        return 'ayr_default_user';
+      }
+    }
+
+    window.switchMode = function(mode) {
+      var imgBox = document.getElementById('mode-image-box');
+      var urlBox = document.getElementById('mode-url-box');
+      var btnImg = document.getElementById('tab-btn-image');
+      var btnUrl = document.getElementById('tab-btn-url');
+
+      if (mode === 'url') {
+        if (imgBox) imgBox.style.display = 'none';
+        if (urlBox) urlBox.style.display = 'block';
+        if (btnUrl) btnUrl.classList.add('active');
+        if (btnImg) btnImg.classList.remove('active');
+      } else {
+        if (imgBox) imgBox.style.display = 'block';
+        if (urlBox) urlBox.style.display = 'none';
+        if (btnImg) btnImg.classList.add('active');
+        if (btnUrl) btnUrl.classList.remove('active');
+      }
+    };
+
+    window.handleImageUpload = async function(inputEl) {
+      if (!inputEl || !inputEl.files || inputEl.files.length === 0) return;
+      var file = inputEl.files[0];
+
+      var loadingCard = document.getElementById('loading-card');
+      var cardSection = document.getElementById('product-card-section');
+
+      if (loadingCard) loadingCard.style.display = 'block';
+      if (cardSection) cardSection.style.display = 'none';
+
+      var formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        var res = await fetch('/api/extract-image', {
+          method: 'POST',
+          body: formData
+        });
+
+        var data = await res.json();
+
+        if (data.success && data.product) {
+          currentScrapedProduct = data.product;
+          window.renderProductCardUI(data.product);
+          if (cardSection && typeof cardSection.scrollIntoView === 'function') {
+            cardSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        } else {
+          alert('عذراً: ' + (data.error || 'تعذر استخراج بيانات الصورة.'));
+        }
+      } catch (err) {
+        alert('حدث خطأ أثناء معالجة الصورة.');
+      } finally {
+        if (loadingCard) loadingCard.style.display = 'none';
+      }
+    };
+
+    window.handleScrapeClick = async function(overrideUrl) {
+      var urlInput = document.getElementById('url-input');
+      var url = overrideUrl || (urlInput ? urlInput.value.trim() : '');
+      if (!url) {
+        alert('الرجاء لصق رابط منتج صحيح.');
+        return;
+      }
+
+      if (urlInput) urlInput.value = url;
+
+      var spinner = document.getElementById('btn-scrape-spinner');
+      var btnText = document.getElementById('btn-scrape-text');
+      var btn = document.getElementById('btn-scrape');
+      var loadingCard = document.getElementById('loading-card');
+      var cardSection = document.getElementById('product-card-section');
+
+      if (spinner) spinner.style.display = 'inline-block';
+      if (btnText) btnText.textContent = 'جاري الفحص...';
+      if (btn) btn.disabled = true;
+      if (loadingCard) loadingCard.style.display = 'block';
+      if (cardSection) cardSection.style.display = 'none';
+
+      try {
+        var res = await fetch('/api/scrape', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url })
+        });
+
+        var data = await res.json();
+
+        if (data.success && data.product) {
+          currentScrapedProduct = data.product;
+          window.renderProductCardUI(data.product);
+          if (cardSection && typeof cardSection.scrollIntoView === 'function') {
+            cardSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        } else {
+          alert('عذراً: ' + (data.error || 'تعذر استخراج بيانات المنتج.'));
+        }
+      } catch (err) {
+        alert('حدث خطأ في الاتصال بالخادم.');
+      } finally {
+        if (spinner) spinner.style.display = 'none';
+        if (btnText) btnText.textContent = '⚡ استخراج السلعة';
+        if (btn) btn.disabled = false;
+        if (loadingCard) loadingCard.style.display = 'none';
+      }
+    };
+
+    window.renderProductCardUI = function(p) {
+      currentItemQuantity = 1;
+      var qtyEl = document.getElementById('res-qty-val');
+      if (qtyEl) qtyEl.textContent = '1';
+
+      var mainImg = document.getElementById('res-main-img');
+      var badge = document.getElementById('res-store-badge');
+      var title = document.getElementById('res-title');
+      var desc = document.getElementById('res-desc');
+      var priceInput = document.getElementById('res-source-price-input');
+      var currency = document.getElementById('res-source-currency');
+      var cardSection = document.getElementById('product-card-section');
+
+      if (mainImg) mainImg.src = p.mainImage || (p.images && p.images[0]) || '';
+      if (badge) badge.textContent = p.storeName || p.store.toUpperCase();
+      if (title) title.textContent = p.title;
+      if (desc) desc.textContent = p.description || 'تم استخراج السعر الأصلي بدقة.';
+      if (priceInput) priceInput.value = Number(p.sourcePrice || 20).toFixed(2);
+      if (currency) currency.textContent = p.sourceCurrency || 'EUR';
+
+      window.recalcTotalTND();
+
+      // Sizes
+      var sizesList = document.getElementById('res-sizes-list');
+      if (sizesList) {
+        if (p.variants && p.variants.sizes && p.variants.sizes.length > 0) {
+          selectedProductSize = p.variants.sizes[0];
+          sizesList.innerHTML = p.variants.sizes.map(function(s, i) {
+            return '<button class="swatch-btn ' + (i === 0 ? 'active' : '') + '" onclick="window.selectSizeItem(\'' + s + '\', this)">' + s + '</button>';
+          }).join('');
+        } else {
+          selectedProductSize = 'Standard';
+          sizesList.innerHTML = '<button class="swatch-btn active">خيار قياسي</button>';
+        }
+      }
+
+      // Colors
+      var colorsGroup = document.getElementById('res-colors-group');
+      var colorsList = document.getElementById('res-colors-list');
+      if (colorsGroup && colorsList) {
+        if (p.variants && p.variants.colors && p.variants.colors.length > 0) {
+          colorsGroup.style.display = 'flex';
+          selectedProductColor = p.variants.colors[0];
+          colorsList.innerHTML = p.variants.colors.map(function(c, i) {
+            return '<button class="swatch-btn ' + (i === 0 ? 'active' : '') + '" onclick="window.selectColorItem(\'' + c + '\', this)">' + c + '</button>';
+          }).join('');
+        } else {
+          colorsGroup.style.display = 'none';
+          selectedProductColor = null;
+        }
+      }
+
+      if (cardSection) cardSection.style.display = 'block';
+    };
+
+    window.recalcTotalTND = function() {
+      if (!currentScrapedProduct) return;
+
+      var priceInput = document.getElementById('res-source-price-input');
+      var sourcePrice = parseFloat(priceInput ? priceInput.value : 20) || currentScrapedProduct.sourcePrice || 20;
+      var currency = currentScrapedProduct.sourceCurrency || 'EUR';
+
+      // 1 EUR = 4.00 DT / 1 USD = 4.00 DT
+      var rate = 4.00;
+      if (currency === 'USD') rate = 4.00;
+      if (currency === 'JPY') rate = 0.0265;
+      if (currency === 'GBP') rate = 4.80;
+
+      var convertedTND = sourcePrice * rate;
+      var serviceFee = Math.max(10, convertedTND * 0.08);
+      var shipping = 25.00;
+      var totalTND = Math.round((convertedTND + serviceFee + shipping) * 100) / 100;
+
+      currentScrapedProduct.sourcePrice = sourcePrice;
+      currentScrapedProduct.totalPriceTND = totalTND;
+
+      var totalTag = document.getElementById('res-total-tnd');
+      if (totalTag) {
+        totalTag.textContent = totalTND.toFixed(2).replace('.', ',') + ' DT';
+      }
+    };
+
+    window.selectSizeItem = function(size, el) {
+      selectedProductSize = size;
+      var btns = document.querySelectorAll('#res-sizes-list .swatch-btn');
+      for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+      if (el) el.classList.add('active');
+    };
+
+    window.selectColorItem = function(color, el) {
+      selectedProductColor = color;
+      var btns = document.querySelectorAll('#res-colors-list .swatch-btn');
+      for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+      if (el) el.classList.add('active');
+    };
+
+    window.modifyQuantity = function(delta) {
+      var next = currentItemQuantity + delta;
+      if (next >= 1 && next <= 20) {
+        currentItemQuantity = next;
+        var qtyEl = document.getElementById('res-qty-val');
+        if (qtyEl) qtyEl.textContent = next;
+      }
+    };
+
+    window.addToCartAction = async function() {
+      if (!currentScrapedProduct) return;
+
+      window.recalcTotalTND();
+
+      var variantText = '';
+      if (selectedProductSize) variantText += 'المقاس: ' + selectedProductSize;
+      if (selectedProductColor) variantText += (variantText ? ' | ' : '') + 'اللون: ' + selectedProductColor;
+
+      var payload = {
+        store: currentScrapedProduct.store,
+        externalId: currentScrapedProduct.externalId,
+        url: currentScrapedProduct.url,
+        title: currentScrapedProduct.title,
+        imageUrl: currentScrapedProduct.mainImage || (currentScrapedProduct.images ? currentScrapedProduct.images[0] : ''),
+        sourcePrice: currentScrapedProduct.sourcePrice,
+        sourceCurrency: currentScrapedProduct.sourceCurrency,
+        priceTND: currentScrapedProduct.totalPriceTND,
+        variant: variantText || null,
+        quantity: currentItemQuantity
+      };
+
+      var btn = document.getElementById('btn-add-cart');
+      if (btn) {
+        btn.innerHTML = '<span>⏳ جاري الإضافة للسلة...</span>';
+        btn.disabled = true;
+      }
+
+      try {
+        var res = await fetch('/api/cart/items', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-session-id': getUserSessionId()
+          },
+          body: JSON.stringify(payload)
+        });
+
+        var json = await res.json();
+
+        if (json.success) {
+          var toastTitle = document.getElementById('toast-product-title');
+          var toastModal = document.getElementById('toast-modal');
+          if (toastTitle) toastTitle.textContent = currentScrapedProduct.title.substring(0, 70) + '...';
+          if (toastModal) toastModal.style.display = 'flex';
+          window.refreshCartCount();
+        } else {
+          alert('حدث خطأ: ' + (json.error || 'تعذر إضافة المنتج للسلة.'));
+        }
+      } catch (err) {
+        alert('خطأ في الاتصال بالخادم.');
+      } finally {
+        if (btn) {
+          btn.innerHTML = '<span class="icon">🛒</span><span>أضف إلى سلة AYROVI وتأكيد الشراء</span>';
+          btn.disabled = false;
+        }
+      }
+    };
+
+    window.closeToastModal = function() {
+      var modal = document.getElementById('toast-modal');
+      if (modal) modal.style.display = 'none';
+    };
+
+    window.refreshCartCount = async function() {
+      try {
+        var res = await fetch('/api/cart/items', {
+          headers: { 'x-session-id': getUserSessionId() }
+        });
+        var data = await res.json();
+        var count = data.itemCount || 0;
+        var badge = document.getElementById('cart-count-badge');
+        if (badge) badge.textContent = count;
+      } catch (e) {}
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      window.refreshCartCount();
+    });
+  </script>
+</body>
+</html>
