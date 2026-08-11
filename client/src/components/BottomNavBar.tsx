@@ -59,8 +59,8 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
               ? 'bg-[#673de6] text-white border-2 border-[#673de6]'
               : 'bg-[#f1ebff] hover:bg-[#e4dbff] text-[#673de6] border border-[#e4dbff]'
           }`}
-          title="Assistant Rofio AI"
-          aria-label="Assistant IA Rofio"
+          title="Assistant AYROVI"
+          aria-label="Assistant AYROVI"
         >
           <AiLogoIcon className="w-6 h-6" />
         </button>

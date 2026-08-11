@@ -116,13 +116,50 @@
   to { transform: translateX(-50%); }
 }
 
-.marquee-track {
+.brands-marquee-track {
   display: flex;
   width: max-content;
-  gap: 24px;
-  animation: marqueeScroll 38s linear infinite;
+  gap: 28px;
+  will-change: transform;
+  animation: marqueeScroll 48s linear infinite;
 }
 
-.marquee-track:hover {
+.brands-marquee-track:hover {
   animation-play-state: paused;
+}
+
+/* AYROVI assistant entrance animations */
+@keyframes assistantPanelIn {
+  from { transform: translateY(36px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes assistantSideMenuIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes assistantSheetIn {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.assistant-panel {
+  animation: assistantPanelIn 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.assistant-side-menu {
+  animation: assistantSideMenuIn 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.assistant-sheet {
+  animation: assistantSheetIn 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant-panel,
+  .assistant-side-menu,
+  .assistant-sheet {
+    animation-duration: 1ms;
+  }
 }

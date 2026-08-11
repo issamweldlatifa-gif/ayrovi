@@ -7,7 +7,7 @@ import { PartnerBrandsSlider } from './components/PartnerBrandsSlider';
 import { AboutSection } from './components/AboutSection';
 import { BottomNavBar } from './components/BottomNavBar';
 import { ProductDrawer } from './components/ProductDrawer';
-import { AiAssistantDrawer } from './components/AiAssistantDrawer';
+import { AiAssistantDrawer } from './components/assistant/AiAssistantDrawer';
 import { ScrollToTopButton } from './components/ScrollToTopButton';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
@@ -185,7 +185,7 @@ export const App: React.FC = () => {
         }}
       />
 
-      {/* Big Impact Hero with 3 fashion photos & ONLY "Profitez de votre shopping maintenant" */}
+      {/* Full-image fashion hero */}
       <HeroSlider />
 
       {/* Error Message Notification */}
@@ -239,7 +239,7 @@ export const App: React.FC = () => {
         onNewClientOrder={handleNewClientOrder}
       />
 
-      {/* DRAWER 2: AI Assistant "Rofio" Chat Drawer (1:1 ayrovi-interface.html) */}
+      {/* Modular AYROVI assistant interface */}
       <AiAssistantDrawer
         isOpen={isAiDrawerOpen}
         onClose={() => setIsAiDrawerOpen(false)}

@@ -8,77 +8,84 @@ interface BrandItem {
 }
 
 const BRANDS: BrandItem[] = [
-  { name: "SHEIN", category: "Mode & Tendances", grad: "linear-gradient(135deg, #1e1035, #3d1d6d)", accent: "👗" },
-  { name: "Amazon", category: "High-Tech & Maison", grad: "linear-gradient(135deg, #1f2d3d, #0f1c24)", accent: "📦" },
-  { name: "AliExpress", category: "Milliers d'offres", grad: "linear-gradient(135deg, #3d1414, #1f0a0a)", accent: "⚡" },
-  { name: "Zara", category: "Mode Internationale", grad: "linear-gradient(135deg, #1c1c1c, #0d0d0d)", accent: "✨" },
-  { name: "TEMU", category: "Prix d'usine", grad: "linear-gradient(135deg, #3d1e0f, #211005)", accent: "🛍️" },
-  { name: "Zalando", category: "Chaussures & Vêtements", grad: "linear-gradient(135deg, #2b153d, #140920)", accent: "👟" },
-  { name: "ASOS", category: "Streetwear & Accessoires", grad: "linear-gradient(135deg, #0d1e33, #050d17)", accent: "🕶️" },
-  { name: "Nike", category: "Sport & Sneakers", grad: "linear-gradient(135deg, #151515, #292929)", accent: "🔥" },
-  { name: "H&M", category: "Collection Globale", grad: "linear-gradient(135deg, #290d0d, #140505)", accent: "🧣" },
-  { name: "eBay", category: "Boutiques Rares", grad: "linear-gradient(135deg, #1c1438, #0e0921)", accent: "💎" },
+  { name: 'SHEIN', category: 'Mode & Tendances', grad: 'linear-gradient(145deg, #2d174f 0%, #13091f 100%)', accent: '👗' },
+  { name: 'Amazon', category: 'High-Tech & Maison', grad: 'linear-gradient(145deg, #23384d 0%, #0a121a 100%)', accent: '📦' },
+  { name: 'AliExpress', category: "Des milliers d'offres", grad: 'linear-gradient(145deg, #551e1e 0%, #180707 100%)', accent: '⚡' },
+  { name: 'Zara', category: 'Mode Internationale', grad: 'linear-gradient(145deg, #353535 0%, #090909 100%)', accent: '✨' },
+  { name: 'TEMU', category: "Prix d'usine", grad: 'linear-gradient(145deg, #5b2c12 0%, #1d0c03 100%)', accent: '🛍️' },
+  { name: 'Zalando', category: 'Chaussures & Vêtements', grad: 'linear-gradient(145deg, #44215f 0%, #15091e 100%)', accent: '👟' },
+  { name: 'ASOS', category: 'Streetwear & Accessoires', grad: 'linear-gradient(145deg, #16365d 0%, #050b13 100%)', accent: '🕶️' },
+  { name: 'Nike', category: 'Sport & Sneakers', grad: 'linear-gradient(145deg, #333333 0%, #0c0c0c 100%)', accent: '🔥' },
+  { name: 'H&M', category: 'Collection Globale', grad: 'linear-gradient(145deg, #541919 0%, #150505 100%)', accent: '🧣' },
+  { name: 'eBay', category: 'Boutiques Rares', grad: 'linear-gradient(145deg, #332663 0%, #0e0921 100%)', accent: '💎' },
 ];
 
 export const PartnerBrandsSlider: React.FC = () => {
   const allBrands = [...BRANDS, ...BRANDS];
 
   return (
-    <section className="relative w-full py-20 sm:py-28 bg-[#0a0518] text-white overflow-hidden my-16 sm:my-24">
-      
-      {/* Background Lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#673de6]/20 rounded-full blur-3xl pointer-events-none" />
-
-      {/* Header Container */}
-      <div className="relative text-center px-4 max-w-3xl mx-auto mb-12 sm:mb-16 space-y-3">
-        
-        {/* Eyebrow */}
-        <div className="inline-flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-widest text-[#ffc24b] uppercase">
-          <span className="w-6 h-[1.5px] bg-[#ffc24b]" />
-          <span>Marketplaces Supportées</span>
-          <span className="w-6 h-[1.5px] bg-[#ffc24b]" />
+    <section className="w-full bg-white py-16 sm:py-24">
+      {/* Description outside the dark slider container */}
+      <div className="mx-auto max-w-4xl px-5 pb-10 text-center sm:px-8 sm:pb-14">
+        <div className="mb-4 inline-flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.2em] text-[#673de6] sm:text-sm">
+          <span className="h-[2px] w-7 bg-[#facc15]" />
+          Marketplaces supportées
+          <span className="h-[2px] w-7 bg-[#facc15]" />
         </div>
-
-        {/* Title */}
-        <h2 className="font-extrabold text-2xl sm:text-4xl md:text-5xl text-white tracking-tight leading-tight">
-          Boutiques & Enseignes Internationales
+        <h2 className="text-3xl font-black leading-tight tracking-[-0.045em] text-[#17131f] sm:text-5xl">
+          Vos marques préférées, réunies au même endroit.
         </h2>
-
-        {/* Subtitle */}
-        <p className="text-xs sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed font-medium opacity-90">
-          AYROVI connecte vos achats aux plus grands sites e-commerce internationaux, avec dédouanement et livraison à domicile en Dinars Tunisiens.
+        <p className="mx-auto mt-5 max-w-2xl text-sm font-medium leading-7 text-slate-600 sm:text-base">
+          AYROVI connecte vos achats aux plus grandes boutiques internationales et s’occupe du paiement, du dédouanement et de la livraison en Dinars Tunisiens.
         </p>
-
       </div>
 
-      {/* Marquee Slider Row */}
-      <div className="relative overflow-hidden w-full">
-        <div className="marquee-track px-4">
-          {allBrands.map((brand, idx) => (
-            <div
-              key={idx}
-              className="flex-shrink-0 w-[240px] sm:w-[320px] h-[300px] sm:h-[380px] rounded-2xl relative overflow-hidden flex flex-col justify-end p-5 transition-all duration-300 hover:-translate-y-2 border border-white/10 group shadow-xl"
-              style={{ background: brand.grad }}
-            >
-              {/* Top Accent Icon */}
-              <div className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-xl shadow-xs">
-                {brand.accent}
-              </div>
+      {/* Large black brands slider */}
+      <div className="relative mx-auto max-w-[1440px] overflow-hidden bg-black py-10 shadow-[0_30px_80px_-35px_rgba(0,0,0,0.65)] sm:rounded-[38px] sm:py-14">
+        <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-[70%] -translate-x-1/2 rounded-full bg-[#673de6]/20 blur-[100px]" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-black to-transparent sm:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 bg-gradient-to-l from-black to-transparent sm:w-28" />
 
-              {/* Glass Card Info */}
-              <div className="relative z-10 p-4 sm:p-5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 group-hover:border-white/40 transition-all">
-                <span className="block text-[10px] sm:text-xs font-semibold tracking-widest uppercase text-[#ffc24b] mb-1">
-                  {brand.category}
+        <div className="relative mb-8 flex items-center justify-between px-6 sm:px-12">
+          <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/55">Explorez les boutiques</p>
+          <span className="rounded-full border border-white/15 px-3 py-1.5 text-[10px] font-bold text-white/65">Défilement automatique</span>
+        </div>
+
+        <div className="relative w-full overflow-hidden">
+          <div className="brands-marquee-track px-5 sm:px-8">
+            {allBrands.map((brand, index) => (
+              <article
+                key={`${brand.name}-${index}`}
+                className="group relative h-[360px] w-[285px] flex-shrink-0 overflow-hidden rounded-[28px] border border-white/15 p-6 shadow-2xl transition duration-500 hover:-translate-y-2 hover:border-white/35 sm:h-[455px] sm:w-[375px] sm:rounded-[32px] sm:p-8 lg:h-[480px] lg:w-[410px]"
+                style={{ background: brand.grad }}
+              >
+                <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10 blur-3xl transition duration-700 group-hover:scale-125" />
+                <span className="absolute left-6 top-5 text-[11px] font-bold tabular-nums tracking-[0.22em] text-white/45 sm:left-8 sm:top-7">
+                  {String((index % BRANDS.length) + 1).padStart(2, '0')}
                 </span>
-                <h3 className="font-extrabold text-2xl sm:text-3xl text-white leading-none">
-                  {brand.name}
-                </h3>
-              </div>
-            </div>
-          ))}
+                <div className="absolute right-5 top-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-2xl shadow-lg backdrop-blur-md sm:right-7 sm:top-7 sm:h-16 sm:w-16 sm:text-3xl">
+                  {brand.accent}
+                </div>
+
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="select-none text-7xl font-black tracking-[-0.08em] text-white/[0.055] sm:text-8xl">
+                    {brand.name.slice(0, 2).toUpperCase()}
+                  </span>
+                </div>
+
+                <div className="absolute inset-x-6 bottom-6 z-10 rounded-[22px] border border-white/20 bg-black/25 p-5 backdrop-blur-xl transition duration-300 group-hover:bg-black/35 sm:inset-x-8 sm:bottom-8 sm:p-6">
+                  <span className="mb-2 block text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#facc15] sm:text-xs">
+                    {brand.category}
+                  </span>
+                  <h3 className="text-3xl font-black leading-none tracking-[-0.04em] text-white sm:text-4xl">
+                    {brand.name}
+                  </h3>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
-
     </section>
   );
 };
