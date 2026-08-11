@@ -1,23 +1,43 @@
 import React from 'react';
+import adidasLogo from '../assets/brands/adidas.jpg';
+import burberryLogo from '../assets/brands/burberry.jpg';
+import chanelLogo from '../assets/brands/chanel.jpg';
+import diorLogo from '../assets/brands/dior.jpg';
+import dolceGabbanaLogo from '../assets/brands/dolce-gabbana.jpg';
+import ellesseLogo from '../assets/brands/ellesse.jpg';
+import hermesLogo from '../assets/brands/hermes.jpg';
+import jordanLogo from '../assets/brands/jordan.jpg';
+import nikeLogo from '../assets/brands/nike.jpg';
+import pradaLogo from '../assets/brands/prada.jpg';
+import sheinLogo from '../assets/brands/shein.jpg';
+import theNorthFaceLogo from '../assets/brands/the-north-face.jpg';
+import versaceLogo from '../assets/brands/versace.jpg';
+import yslLogo from '../assets/brands/ysl.jpg';
+import zaraLogo from '../assets/brands/zara.jpg';
 
 interface BrandItem {
   name: string;
   category: string;
-  grad: string;
-  accent: string;
+  logo: string;
+  surface: 'dark' | 'light';
 }
 
 const BRANDS: BrandItem[] = [
-  { name: 'SHEIN', category: 'Mode & Tendances', grad: 'linear-gradient(145deg, #2d174f 0%, #13091f 100%)', accent: '👗' },
-  { name: 'Amazon', category: 'High-Tech & Maison', grad: 'linear-gradient(145deg, #23384d 0%, #0a121a 100%)', accent: '📦' },
-  { name: 'AliExpress', category: "Des milliers d'offres", grad: 'linear-gradient(145deg, #551e1e 0%, #180707 100%)', accent: '⚡' },
-  { name: 'Zara', category: 'Mode Internationale', grad: 'linear-gradient(145deg, #353535 0%, #090909 100%)', accent: '✨' },
-  { name: 'TEMU', category: "Prix d'usine", grad: 'linear-gradient(145deg, #5b2c12 0%, #1d0c03 100%)', accent: '🛍️' },
-  { name: 'Zalando', category: 'Chaussures & Vêtements', grad: 'linear-gradient(145deg, #44215f 0%, #15091e 100%)', accent: '👟' },
-  { name: 'ASOS', category: 'Streetwear & Accessoires', grad: 'linear-gradient(145deg, #16365d 0%, #050b13 100%)', accent: '🕶️' },
-  { name: 'Nike', category: 'Sport & Sneakers', grad: 'linear-gradient(145deg, #333333 0%, #0c0c0c 100%)', accent: '🔥' },
-  { name: 'H&M', category: 'Collection Globale', grad: 'linear-gradient(145deg, #541919 0%, #150505 100%)', accent: '🧣' },
-  { name: 'eBay', category: 'Boutiques Rares', grad: 'linear-gradient(145deg, #332663 0%, #0e0921 100%)', accent: '💎' },
+  { name: 'Jordan', category: 'Sport & Sneakers', logo: jordanLogo, surface: 'dark' },
+  { name: 'Ellesse', category: 'Sportswear italien', logo: ellesseLogo, surface: 'dark' },
+  { name: 'The North Face', category: 'Outdoor & Exploration', logo: theNorthFaceLogo, surface: 'dark' },
+  { name: 'adidas', category: 'Sport & Lifestyle', logo: adidasLogo, surface: 'dark' },
+  { name: 'Nike', category: 'Sport & Sneakers', logo: nikeLogo, surface: 'dark' },
+  { name: 'SHEIN', category: 'Mode & Tendances', logo: sheinLogo, surface: 'dark' },
+  { name: 'Saint Laurent', category: 'Luxe parisien', logo: yslLogo, surface: 'light' },
+  { name: 'Prada', category: 'Mode italienne', logo: pradaLogo, surface: 'light' },
+  { name: 'Hermès', category: 'Maison de luxe', logo: hermesLogo, surface: 'light' },
+  { name: 'Burberry', category: 'Luxe britannique', logo: burberryLogo, surface: 'light' },
+  { name: 'Dolce & Gabbana', category: 'Mode italienne', logo: dolceGabbanaLogo, surface: 'light' },
+  { name: 'Versace', category: 'Luxe italien', logo: versaceLogo, surface: 'dark' },
+  { name: 'Chanel', category: 'Haute couture', logo: chanelLogo, surface: 'dark' },
+  { name: 'Dior', category: 'Haute couture', logo: diorLogo, surface: 'dark' },
+  { name: 'Zara', category: 'Mode internationale', logo: zaraLogo, surface: 'dark' },
 ];
 
 export const PartnerBrandsSlider: React.FC = () => {
@@ -25,64 +45,83 @@ export const PartnerBrandsSlider: React.FC = () => {
 
   return (
     <section className="w-full bg-white py-16 sm:py-24">
-      {/* Description outside the dark slider container */}
       <div className="mx-auto max-w-4xl px-5 pb-10 text-center sm:px-8 sm:pb-14">
         <div className="mb-4 inline-flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.2em] text-[#673de6] sm:text-sm">
           <span className="h-[2px] w-7 bg-[#facc15]" />
-          Marketplaces supportées
+          Marques partenaires
           <span className="h-[2px] w-7 bg-[#facc15]" />
         </div>
         <h2 className="text-3xl font-black leading-tight tracking-[-0.045em] text-[#17131f] sm:text-5xl">
           Vos marques préférées, réunies au même endroit.
         </h2>
         <p className="mx-auto mt-5 max-w-2xl text-sm font-medium leading-7 text-slate-600 sm:text-base">
-          AYROVI connecte vos achats aux plus grandes boutiques internationales et s’occupe du paiement, du dédouanement et de la livraison en Dinars Tunisiens.
+          Découvrez les enseignes disponibles avec AYROVI. Chaque carte présente le logo correspondant à la marque affichée.
         </p>
       </div>
 
-      {/* Large black brands slider */}
       <div className="relative w-full overflow-hidden bg-black py-10 shadow-[0_30px_80px_-35px_rgba(0,0,0,0.65)] sm:py-14">
         <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-[70%] -translate-x-1/2 rounded-full bg-[#673de6]/20 blur-[100px]" />
         <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-black to-transparent sm:w-28" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 bg-gradient-to-l from-black to-transparent sm:w-28" />
 
-        <div className="relative mb-8 flex items-center justify-between px-6 sm:px-12">
-          <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/55">Explorez les boutiques</p>
-          <span className="rounded-full border border-white/15 px-3 py-1.5 text-[10px] font-bold text-white/65">Défilement automatique</span>
+        <div className="relative mb-8 flex items-center justify-between gap-4 px-6 sm:px-12">
+          <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-white/55">
+            Explorez les marques
+          </p>
+          <span className="rounded-full border border-white/15 px-3 py-1.5 text-[10px] font-bold text-white/65">
+            Défilement automatique
+          </span>
         </div>
 
         <div className="relative w-full overflow-hidden">
           <div className="brands-marquee-track px-5 sm:px-8">
-            {allBrands.map((brand, index) => (
-              <article
-                key={`${brand.name}-${index}`}
-                className="group relative h-[360px] w-[285px] flex-shrink-0 overflow-hidden rounded-[28px] border border-white/15 p-6 shadow-2xl transition duration-500 hover:-translate-y-2 hover:border-white/35 sm:h-[455px] sm:w-[375px] sm:rounded-[32px] sm:p-8 lg:h-[480px] lg:w-[410px]"
-                style={{ background: brand.grad }}
-              >
-                <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-white/10 blur-3xl transition duration-700 group-hover:scale-125" />
-                <span className="absolute left-6 top-5 text-[11px] font-bold tabular-nums tracking-[0.22em] text-white/45 sm:left-8 sm:top-7">
-                  {String((index % BRANDS.length) + 1).padStart(2, '0')}
-                </span>
-                <div className="absolute right-5 top-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-2xl shadow-lg backdrop-blur-md sm:right-7 sm:top-7 sm:h-16 sm:w-16 sm:text-3xl">
-                  {brand.accent}
-                </div>
+            {allBrands.map((brand, index) => {
+              const isDark = brand.surface === 'dark';
 
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="select-none text-7xl font-black tracking-[-0.08em] text-white/[0.055] sm:text-8xl">
-                    {brand.name.slice(0, 2).toUpperCase()}
+              return (
+                <article
+                  key={`${brand.name}-${index}`}
+                  aria-hidden={index >= BRANDS.length}
+                  className={`group relative h-[330px] w-[270px] flex-shrink-0 overflow-hidden rounded-[28px] border shadow-2xl transition duration-500 hover:-translate-y-2 sm:h-[400px] sm:w-[340px] sm:rounded-[32px] ${
+                    isDark
+                      ? 'border-white/15 bg-black hover:border-white/35'
+                      : 'border-black/10 bg-[#f7f7f7] hover:border-[#673de6]/40'
+                  }`}
+                >
+                  <span
+                    className={`absolute left-5 top-5 z-10 rounded-full px-3 py-1 text-[10px] font-extrabold tabular-nums tracking-[0.2em] backdrop-blur-md sm:left-6 sm:top-6 ${
+                      isDark ? 'bg-white/10 text-white/60' : 'bg-black/5 text-black/50'
+                    }`}
+                  >
+                    {String((index % BRANDS.length) + 1).padStart(2, '0')}
                   </span>
-                </div>
 
-                <div className="absolute inset-x-6 bottom-6 z-10 rounded-[22px] border border-white/20 bg-black/25 p-5 backdrop-blur-xl transition duration-300 group-hover:bg-black/35 sm:inset-x-8 sm:bottom-8 sm:p-6">
-                  <span className="mb-2 block text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#facc15] sm:text-xs">
-                    {brand.category}
-                  </span>
-                  <h3 className="text-3xl font-black leading-none tracking-[-0.04em] text-white sm:text-4xl">
-                    {brand.name}
-                  </h3>
-                </div>
-              </article>
-            ))}
+                  <div className="absolute inset-x-0 top-0 bottom-[92px] flex items-center justify-center overflow-hidden p-5 sm:bottom-[104px] sm:p-7">
+                    <img
+                      src={brand.logo}
+                      alt={`${brand.name} logo`}
+                      className="h-full w-full select-none object-contain transition duration-700 ease-out group-hover:scale-[1.04]"
+                      draggable={false}
+                    />
+                  </div>
+
+                  <div
+                    className={`absolute inset-x-0 bottom-0 min-h-[92px] border-t px-6 py-5 sm:min-h-[104px] sm:px-7 sm:py-6 ${
+                      isDark
+                        ? 'border-white/10 bg-black text-white'
+                        : 'border-black/10 bg-white text-[#17131f]'
+                    }`}
+                  >
+                    <span className="block text-[9px] font-extrabold uppercase tracking-[0.16em] text-[#673de6] sm:text-[10px]">
+                      {brand.category}
+                    </span>
+                    <h3 className="mt-1.5 truncate text-xl font-black tracking-[-0.035em] sm:text-2xl">
+                      {brand.name}
+                    </h3>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -54,47 +54,51 @@ export const AboutSection: React.FC = () => {
         </div>
       </header>
 
-      {/* The supplied portrait is repeated once for each of the three parallax stories. */}
-      {BENEFITS.map(({ step, title, description, icon: Icon, iconClassName, accentClassName }) => (
-        <article key={title} className="relative isolate min-h-[125svh] overflow-clip bg-[#edf9ff]">
-            <div className="sticky top-0 h-[100svh] overflow-hidden" aria-hidden="true">
-              <img
-                src={aboutParallaxImage}
-                alt=""
-                className="absolute inset-0 h-full w-full object-cover object-[38%_center] sm:object-center lg:object-[34%_center]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-[#081426]/35 sm:bg-gradient-to-r sm:from-transparent sm:via-white/15 sm:to-[#f8fcff]/95" />
-              <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/70 to-transparent" />
-            </div>
+      {/* One fixed portrait remains visible while the three cards scroll over it. */}
+      <div className="relative isolate min-h-[300svh] overflow-clip bg-[#edf9ff]">
+        <div className="sticky top-0 h-[100svh] overflow-hidden" aria-hidden="true">
+          <img
+            src={aboutParallaxImage}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover object-[38%_center] sm:object-center lg:object-[34%_center]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-[#081426]/40 sm:bg-gradient-to-r sm:from-transparent sm:via-white/10 sm:to-[#f8fcff]/90" />
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/65 to-transparent" />
+        </div>
 
-            <div className="relative z-10 -mt-[100svh] flex min-h-[125svh] w-full items-center py-20">
-              <div className="relative w-full overflow-hidden border-y border-white/85 bg-white/85 p-7 shadow-[0_30px_80px_-28px_rgba(12,65,94,0.45)] backdrop-blur-xl transition-[box-shadow,background-color] duration-500 ease-out hover:bg-white/90 hover:shadow-[0_38px_90px_-30px_rgba(12,65,94,0.55)] sm:p-10 lg:p-14">
-                <div className={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${accentClassName}`} />
+        <div className="relative z-10 -mt-[100svh]">
+          {BENEFITS.map(
+            ({ step, title, description, icon: Icon, iconClassName, accentClassName }) => (
+              <article key={title} className="flex min-h-[100svh] w-full items-center py-16 sm:py-20">
+                <div className="relative w-full overflow-hidden border-y border-white/85 bg-white/85 p-7 shadow-[0_30px_80px_-28px_rgba(12,65,94,0.45)] backdrop-blur-xl transition-[box-shadow,background-color] duration-500 ease-out hover:bg-white/90 hover:shadow-[0_38px_90px_-30px_rgba(12,65,94,0.55)] sm:p-10 lg:p-14">
+                  <div className={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${accentClassName}`} />
 
-                <div className="flex items-start justify-between gap-5">
-                  <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-md sm:h-14 sm:w-14 ${iconClassName}`}>
-                    <Icon className="h-6 w-6 sm:h-7 sm:w-7" />
-                  </span>
-                  <span className="text-5xl font-black leading-none text-[#1d2130]/[0.07] sm:text-6xl">
-                    {step}
-                  </span>
+                  <div className="flex items-start justify-between gap-5">
+                    <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl shadow-md sm:h-14 sm:w-14 ${iconClassName}`}>
+                      <Icon className="h-6 w-6 sm:h-7 sm:w-7" />
+                    </span>
+                    <span className="text-5xl font-black leading-none text-[#1d2130]/[0.07] sm:text-6xl">
+                      {step}
+                    </span>
+                  </div>
+
+                  <div className="my-7 h-px w-full bg-gradient-to-r from-[#673de6]/55 via-[#dfeaf0] to-transparent" />
+
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#673de6]">
+                    Avantage AYROVI
+                  </p>
+                  <h3 className="mt-2 text-2xl font-extrabold tracking-tight text-[#1d2130] sm:text-3xl lg:text-4xl">
+                    {title}
+                  </h3>
+                  <p className="mt-4 max-w-3xl text-sm font-medium leading-7 text-[#697180] sm:text-base sm:leading-8">
+                    {description}
+                  </p>
                 </div>
-
-                <div className="my-7 h-px w-full bg-gradient-to-r from-[#673de6]/55 via-[#dfeaf0] to-transparent" />
-
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#673de6]">
-                  Avantage AYROVI
-                </p>
-                <h3 className="mt-2 text-2xl font-extrabold tracking-tight text-[#1d2130] sm:text-3xl lg:text-4xl">
-                  {title}
-                </h3>
-                <p className="mt-4 max-w-3xl text-sm font-medium leading-7 text-[#697180] sm:text-base sm:leading-8">
-                  {description}
-                </p>
-              </div>
-            </div>
-          </article>
-      ))}
+              </article>
+            ),
+          )}
+        </div>
+      </div>
 
       <div className="flex items-center justify-center gap-3 bg-white px-4 py-16 text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#673de6] sm:text-xs">
         <span className="h-px w-10 bg-[#fbbf24]" />

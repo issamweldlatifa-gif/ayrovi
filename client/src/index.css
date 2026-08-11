@@ -163,7 +163,7 @@
   width: max-content;
   gap: 28px;
   will-change: transform;
-  animation: marqueeScroll 48s linear infinite;
+  animation: marqueeScroll 78s linear infinite;
 }
 
 .brands-marquee-track:hover {
