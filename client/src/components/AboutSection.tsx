@@ -55,9 +55,8 @@ export const AboutSection: React.FC = () => {
       </header>
 
       {/* The supplied portrait is repeated once for each of the three parallax stories. */}
-      {BENEFITS.map(({ step, title, description, icon: Icon, iconClassName, accentClassName }, index) => (
-        <React.Fragment key={title}>
-          <article className="relative isolate min-h-[125svh] overflow-clip bg-[#edf9ff]">
+      {BENEFITS.map(({ step, title, description, icon: Icon, iconClassName, accentClassName }) => (
+        <article key={title} className="relative isolate min-h-[125svh] overflow-clip bg-[#edf9ff]">
             <div className="sticky top-0 h-[100svh] overflow-hidden" aria-hidden="true">
               <img
                 src={aboutParallaxImage}
@@ -74,8 +73,8 @@ export const AboutSection: React.FC = () => {
               <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/70 to-transparent" />
             </div>
 
-            <div className="relative z-10 -mt-[100svh] flex min-h-[125svh] w-full items-center px-4 py-20 sm:px-6 lg:px-8">
-              <div className="relative w-full overflow-hidden rounded-[30px] border border-white/85 bg-white/85 p-7 shadow-[0_30px_80px_-28px_rgba(12,65,94,0.45)] backdrop-blur-xl transition-[transform,box-shadow,background-color] duration-500 ease-out hover:-translate-y-1 hover:bg-white/90 hover:shadow-[0_38px_90px_-30px_rgba(12,65,94,0.55)] sm:rounded-[36px] sm:p-10 lg:p-14">
+            <div className="relative z-10 -mt-[100svh] flex min-h-[125svh] w-full items-center py-20">
+              <div className="relative w-full overflow-hidden border-y border-white/85 bg-white/85 p-7 shadow-[0_30px_80px_-28px_rgba(12,65,94,0.45)] backdrop-blur-xl transition-[box-shadow,background-color] duration-500 ease-out hover:bg-white/90 hover:shadow-[0_38px_90px_-30px_rgba(12,65,94,0.55)] sm:p-10 lg:p-14">
                 <div className={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${accentClassName}`} />
 
                 <div className="flex items-start justify-between gap-5">
@@ -101,13 +100,6 @@ export const AboutSection: React.FC = () => {
               </div>
             </div>
           </article>
-
-          {index < BENEFITS.length - 1 && (
-            <div className="flex h-[22svh] items-center justify-center bg-white" aria-hidden="true">
-              <span className="h-px w-24 bg-gradient-to-r from-transparent via-[#673de6]/40 to-transparent" />
-            </div>
-          )}
-        </React.Fragment>
       ))}
 
       <div className="flex items-center justify-center gap-3 bg-white px-4 py-16 text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#673de6] sm:text-xs">
