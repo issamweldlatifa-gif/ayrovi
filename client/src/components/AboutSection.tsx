@@ -61,13 +61,7 @@ export const AboutSection: React.FC = () => {
               <img
                 src={aboutParallaxImage}
                 alt=""
-                className="absolute inset-0 h-full w-full scale-110 object-cover opacity-25 blur-2xl"
-              />
-              <div className="absolute inset-0 bg-white/20" />
-              <img
-                src={aboutParallaxImage}
-                alt=""
-                className="absolute inset-0 h-full w-full object-contain object-center sm:object-left"
+                className="absolute inset-0 h-full w-full object-cover object-[38%_center] sm:object-center lg:object-[34%_center]"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-[#081426]/35 sm:bg-gradient-to-r sm:from-transparent sm:via-white/15 sm:to-[#f8fcff]/95" />
               <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/70 to-transparent" />
