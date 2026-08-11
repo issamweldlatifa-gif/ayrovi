@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu, User } from 'lucide-react';
 import { FigLogoIcon } from './Icons';
 
@@ -7,65 +7,85 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenMenuDrawer }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [hasPassedHero, setHasPassedHero] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+    let frameId: number | null = null;
+
+    const updateHeader = () => {
+      frameId = null;
+      const hero = document.getElementById('home-hero');
+      if (!hero) {
+        setHasPassedHero(window.scrollY > 420);
+        return;
+      }
+
+      const headerHeight = window.innerWidth >= 640 ? 80 : 64;
+      setHasPassedHero(hero.getBoundingClientRect().bottom <= headerHeight);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const requestUpdate = () => {
+      if (frameId === null) frameId = window.requestAnimationFrame(updateHeader);
+    };
+
+    updateHeader();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+
+    return () => {
+      window.removeEventListener('scroll', requestUpdate);
+      window.removeEventListener('resize', requestUpdate);
+      if (frameId !== null) window.cancelAnimationFrame(frameId);
+    };
   }, []);
 
   return (
     <header
-      className={`sticky top-0 z-40 w-full transition-all duration-300 ${
-        isScrolled
-          ? 'bg-white border-b border-slate-200/90 shadow-sm text-[#1d2130]'
-          : 'bg-transparent text-white'
+      className={`sticky top-0 z-40 w-full transition-all duration-500 ${
+        hasPassedHero
+          ? 'border-b border-slate-200/90 bg-white/95 text-[#1d2130] shadow-[0_8px_30px_-18px_rgba(15,23,42,0.35)] backdrop-blur-xl'
+          : 'border-b border-transparent bg-transparent text-white'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-        
-        {/* LEFT (يسار): Menu Icon (Opens Side Drawer) */}
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8">
         <button
+          type="button"
           onClick={onOpenMenuDrawer}
-          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all shadow-xs cursor-pointer ${
-            isScrolled
-              ? 'bg-[#f8f9fe] text-[#1d2130] hover:bg-slate-200 border border-slate-200'
-              : 'bg-white/20 text-white hover:bg-white/30 border border-white/25 backdrop-blur-md'
+          className={`flex h-10 w-10 items-center justify-center rounded-2xl border shadow-sm transition-all duration-300 active:scale-95 sm:h-11 sm:w-11 ${
+            hasPassedHero
+              ? 'border-[#e4dbff] bg-[#f1ebff] text-[#673de6] hover:bg-[#e8e0ff]'
+              : 'border-white/30 bg-black/20 text-white backdrop-blur-md hover:bg-black/30'
           }`}
           aria-label="Menu"
           title="Menu"
         >
-          <Menu className="w-5 h-5" />
+          <Menu className="h-5 w-5" />
         </button>
 
-        {/* CENTER: AYROVI Logo with Vector Fig Icon */}
         <div className="flex items-center gap-2.5">
-          <FigLogoIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
+          <span className={`flex rounded-xl p-0.5 transition-colors duration-300 ${hasPassedHero ? 'bg-transparent' : 'bg-white/10 backdrop-blur-sm'}`}>
+            <FigLogoIcon className="h-8 w-8 drop-shadow-sm sm:h-9 sm:w-9" />
+          </span>
           <span
-            className={`text-2xl sm:text-3xl font-black tracking-tight transition-colors ${
-              isScrolled ? 'text-[#1d2130]' : 'text-white drop-shadow-md'
+            className={`text-2xl font-black tracking-tight transition-colors duration-300 sm:text-3xl ${
+              hasPassedHero ? 'text-[#1d2130]' : 'text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]'
             }`}
           >
             AYROVI
           </span>
         </div>
 
-        {/* RIGHT (يمين): Profile Avatar */}
         <button
-          onClick={() => alert("Profil Client AYROVI — ID: " + (localStorage.getItem('ayrovi_session_id') || 'Client'))}
-          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full p-0.5 bg-gradient-to-tr from-[#ffc24b] to-[#ff6b9a] shadow-md hover:scale-105 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
+          type="button"
+          onClick={() => alert(`Profil Client AYROVI — ID: ${localStorage.getItem('ayrovi_session_id') || 'Client'}`)}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-tr from-[#ffc24b] to-[#ff6b9a] p-0.5 shadow-md transition hover:scale-105 active:scale-95 sm:h-11 sm:w-11"
           title="Mon Profil AYROVI"
           aria-label="Profil"
         >
-          <div className="w-full h-full rounded-full bg-[#1e0b4b] flex items-center justify-center text-white">
-            <User className="w-5 h-5 text-[#ffc24b]" />
-          </div>
+          <span className={`flex h-full w-full items-center justify-center rounded-full transition-colors duration-300 ${hasPassedHero ? 'bg-[#673de6]' : 'bg-[#1e0b4b]/90 backdrop-blur-sm'}`}>
+            <User className="h-5 w-5 text-[#ffc24b]" />
+          </span>
         </button>
-
       </div>
     </header>
   );
