@@ -18,7 +18,7 @@ export const LinkScraper: React.FC<LinkScraperProps> = ({ onExtracted, onError }
         setUrl(text.trim());
       }
     } catch {
-      // Clipboard permissions
+      // Clipboard
     }
   };
 
@@ -45,24 +45,24 @@ export const LinkScraper: React.FC<LinkScraperProps> = ({ onExtracted, onError }
       onExtracted(data.product);
     } catch (err: any) {
       console.error('[Link Scrape Error]', err);
-      onError(err.message || "Le site source bloque l'accès direct. Nous vous conseillons de déposer une capture d'écran (Screenshot) pour un résultat immédiat.");
+      onError(err.message || "Le site source bloque l'accès direct. Déposez plutôt une capture d'écran pour un calcul instantané.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="w-full bg-[#160e33]/80 border border-[#332266] rounded-3xl p-5 sm:p-8">
+    <div className="w-full white-card rounded-3xl p-5 sm:p-8">
       <form onSubmit={handleScrape} className="space-y-4">
         <div className="flex items-center justify-between">
-          <label htmlFor="link-input" className="text-xs sm:text-sm font-bold text-slate-300 flex items-center gap-2">
-            <Link2 className="w-4 h-4 text-[#a384ff]" />
+          <label htmlFor="link-input" className="text-xs sm:text-sm font-bold text-[#1d2130] flex items-center gap-2">
+            <Link2 className="w-4 h-4 text-[#673de6]" />
             <span>Collez le lien direct (SHEIN, Amazon, TEMU, AliExpress) :</span>
           </label>
           <button
             type="button"
             onClick={handlePaste}
-            className="text-[11px] font-semibold text-[#a384ff] hover:text-white flex items-center gap-1 bg-[#673de6]/20 px-2.5 py-1 rounded-lg border border-[#673de6]/30 transition-colors"
+            className="text-[11px] font-semibold text-[#673de6] hover:text-[#5025d1] flex items-center gap-1 bg-[#673de6]/10 px-2.5 py-1 rounded-lg border border-[#673de6]/20 transition-colors"
           >
             <Clipboard className="w-3 h-3" />
             <span>Coller</span>
@@ -78,23 +78,23 @@ export const LinkScraper: React.FC<LinkScraperProps> = ({ onExtracted, onError }
             placeholder="https://www.shein.com/... ou https://www.amazon.com/..."
             dir="ltr"
             disabled={isLoading}
-            className="w-full bg-[#0c081a]/90 border border-[#332266] focus:border-[#7e57ff] rounded-2xl px-4 py-3.5 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#673de6]/30 transition-all font-mono"
+            className="w-full bg-[#f8f9fe] border border-[#e2e8f0] focus:border-[#673de6] rounded-2xl px-4 py-3.5 text-xs sm:text-sm text-[#1d2130] placeholder:text-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#673de6]/20 transition-all font-mono"
           />
         </div>
 
         <button
           type="submit"
           disabled={isLoading || !url.trim()}
-          className="w-full hostinger-btn disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-[#673de6]/20 flex items-center justify-center gap-2 text-xs sm:text-sm transition-all duration-200"
+          className="w-full hostinger-btn disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 px-6 rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm transition-all duration-200"
         >
           {isLoading ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Récupération des informations de l'article...</span>
+              <span>Calcul du prix en cours...</span>
             </>
           ) : (
             <>
-              <span>Calculer le prix et afficher les détails</span>
+              <span>Calculer le prix en Dinars Tunisiens</span>
               <ArrowRight className="w-4 h-4" />
             </>
           )}

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
+import { HeroSlider } from './components/HeroSlider';
 import { ScreenshotUploader } from './components/ScreenshotUploader';
 import { LinkScraper } from './components/LinkScraper';
 import { ProductCard } from './components/ProductCard';
@@ -15,6 +15,8 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'screenshot' | 'link'>('screenshot');
   const [extractedProduct, setExtractedProduct] = useState<ScrapedProduct | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const inputSectionRef = useRef<HTMLDivElement>(null);
 
   // Cart State
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -58,7 +60,7 @@ export const App: React.FC = () => {
   const handleExtracted = (product: ScrapedProduct) => {
     setExtractedProduct(product);
     setErrorMessage(null);
-    window.scrollTo({ top: 380, behavior: 'smooth' });
+    window.scrollTo({ top: 460, behavior: 'smooth' });
   };
 
   const handleError = (msg: string) => {
@@ -119,40 +121,44 @@ export const App: React.FC = () => {
     setCartItems([]);
   };
 
+  const handleScrollToInput = () => {
+    inputSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen flex flex-col justify-between text-slate-100 selection:bg-[#673de6] selection:text-white">
-      {/* Navbar */}
+    <div className="min-h-screen flex flex-col justify-between text-[#1d2130] bg-[#f8f9fe]">
+      {/* Navbar with Transparent Glass Look */}
       <Navbar
         cartCount={totalCartCount}
         cartTotal={totalCartTND}
         onOpenCart={() => setIsCartOpen(true)}
       />
 
-      {/* Main Content */}
+      {/* Hero Carousel Slider */}
+      <HeroSlider onCtaClick={handleScrollToInput} />
+
+      {/* Main Content Area */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-6 sm:space-y-8 flex-1">
         
-        {/* Hero Section */}
-        <Hero />
-
-        {/* Global Error Banner */}
+        {/* Error Notification Banner */}
         {errorMessage && (
-          <div className="bg-red-500/15 border border-red-500/30 text-red-300 p-4 rounded-2xl flex items-center justify-between text-xs sm:text-sm font-semibold max-w-2xl mx-auto shadow-sm">
+          <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl flex items-center justify-between text-xs sm:text-sm font-semibold max-w-2xl mx-auto shadow-xs">
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600" />
               <span>{errorMessage}</span>
             </div>
             <button
               onClick={() => setErrorMessage(null)}
-              className="text-red-300 hover:text-white text-xs px-2 py-1"
+              className="text-red-600 hover:text-red-800 text-xs px-2 py-1 font-bold"
             >
               ✕
             </button>
           </div>
         )}
 
-        {/* Extraction Tabs Switcher */}
-        <div className="max-w-xl mx-auto">
-          <div className="bg-[#140c2b] border border-[#332266] p-1.5 rounded-2xl grid grid-cols-2 gap-1.5 shadow-md">
+        {/* Input Switcher Tabs */}
+        <div ref={inputSectionRef} className="max-w-xl mx-auto pt-2">
+          <div className="bg-white border border-[#e2e8f0] p-1.5 rounded-2xl grid grid-cols-2 gap-1.5 shadow-xs">
             <button
               onClick={() => {
                 setActiveTab('screenshot');
@@ -160,8 +166,8 @@ export const App: React.FC = () => {
               }}
               className={`py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 ${
                 activeTab === 'screenshot'
-                  ? 'hostinger-btn text-white shadow-md shadow-[#673de6]/25'
-                  : 'text-slate-400 hover:text-white hover:bg-[#1f143d]/60'
+                  ? 'hostinger-btn text-white shadow-xs'
+                  : 'text-[#6b7280] hover:text-[#1d2130] hover:bg-[#f4f5fa]'
               }`}
             >
               <Camera className="w-4 h-4" />
@@ -175,8 +181,8 @@ export const App: React.FC = () => {
               }}
               className={`py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 ${
                 activeTab === 'link'
-                  ? 'hostinger-btn text-white shadow-md shadow-[#673de6]/25'
-                  : 'text-slate-400 hover:text-white hover:bg-[#1f143d]/60'
+                  ? 'hostinger-btn text-white shadow-xs'
+                  : 'text-[#6b7280] hover:text-[#1d2130] hover:bg-[#f4f5fa]'
               }`}
             >
               <Link2 className="w-4 h-4" />
@@ -185,7 +191,7 @@ export const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Input Zone */}
+        {/* Active Input Component */}
         <div className="max-w-2xl mx-auto">
           {activeTab === 'screenshot' ? (
             <ScreenshotUploader
@@ -202,7 +208,7 @@ export const App: React.FC = () => {
 
         {/* Extracted Product Result */}
         {extractedProduct && (
-          <div id="product-card-section" className="pt-4 max-w-3xl mx-auto">
+          <div id="product-card-section" className="pt-2 max-w-3xl mx-auto">
             <ProductCard
               product={extractedProduct}
               onAddToCart={handleAddToCart}

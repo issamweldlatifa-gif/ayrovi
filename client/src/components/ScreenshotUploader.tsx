@@ -82,45 +82,45 @@ export const ScreenshotUploader: React.FC<ScreenshotUploaderProps> = ({ onExtrac
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => !isLoading && fileInputRef.current?.click()}
-        className={`relative cursor-pointer rounded-3xl p-6 sm:p-10 transition-all duration-300 border-2 border-dashed flex flex-col items-center justify-center text-center overflow-hidden ${
+        className={`relative cursor-pointer rounded-3xl p-6 sm:p-10 transition-all duration-300 border-2 border-dashed flex flex-col items-center justify-center text-center overflow-hidden bg-white shadow-xs ${
           isDragging
-            ? 'border-[#7e57ff] bg-[#673de6]/15 scale-[1.01]'
-            : 'border-[#673de6]/40 bg-[#160e33]/80 hover:bg-[#1a113d] hover:border-[#7e57ff]'
+            ? 'border-[#673de6] bg-[#673de6]/5 scale-[1.01]'
+            : 'border-[#e2e8f0] hover:border-[#673de6] hover:bg-[#faf9ff]'
         } ${isLoading ? 'pointer-events-none' : ''}`}
       >
         {/* Loading Overlay */}
         {isLoading && (
-          <div className="absolute inset-0 bg-[#0c081a]/90 backdrop-blur-md z-20 flex flex-col items-center justify-center p-6 text-center">
+          <div className="absolute inset-0 bg-white/95 backdrop-blur-xs z-20 flex flex-col items-center justify-center p-6 text-center">
             <div className="relative mb-4">
-              <div className="w-16 h-16 rounded-full border-4 border-[#673de6]/20 border-t-[#7e57ff] animate-spin" />
+              <div className="w-16 h-16 rounded-full border-4 border-[#673de6]/20 border-t-[#673de6] animate-spin" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-[#a384ff] animate-pulse" />
+                <Sparkles className="w-6 h-6 text-[#673de6] animate-pulse" />
               </div>
             </div>
-            <h3 className="text-base sm:text-lg font-bold text-white mb-1">Analyse de la capture en cours...</h3>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xs">
-              Extraction du prix original et calcul de la conversion en Dinars Tunisiens
+            <h3 className="text-base sm:text-lg font-bold text-[#1d2130] mb-1">Analyse de la capture en cours...</h3>
+            <p className="text-xs sm:text-sm text-[#6b7280] max-w-xs">
+              Extraction automatique du prix et calcul en Dinars Tunisiens
             </p>
           </div>
         )}
 
-        {/* Icon & Visual Graphic */}
-        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-br from-[#673de6]/30 to-[#7e57ff]/10 border border-[#673de6]/40 flex items-center justify-center shadow-lg shadow-[#673de6]/15 mb-4">
-          <Camera className="w-8 h-8 sm:w-10 sm:h-10 text-[#a384ff]" />
+        {/* Icon */}
+        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-[#673de6]/10 border border-[#673de6]/20 flex items-center justify-center shadow-xs mb-4">
+          <Camera className="w-8 h-8 sm:w-10 sm:h-10 text-[#673de6]" />
         </div>
 
         {/* Text Guidelines */}
-        <h3 className="text-base sm:text-xl font-black text-white mb-2">
-          Importez votre capture d'écran <span className="text-[#a384ff]">(Screenshot)</span>
+        <h3 className="text-base sm:text-xl font-extrabold text-[#1d2130] mb-2">
+          Importez votre capture d'écran <span className="text-[#673de6]">(Screenshot)</span>
         </h3>
-        <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto leading-relaxed mb-4">
-          Prenez une capture d'écran du produit ou de votre panier sur <strong className="text-slate-200">SHEIN</strong>, <strong className="text-slate-200">Amazon</strong>, ou <strong className="text-slate-200">TEMU</strong> et déposez-la ici.
+        <p className="text-xs sm:text-sm text-[#6b7280] max-w-md mx-auto leading-relaxed mb-5">
+          Prenez une capture d'écran du produit sur l'application <strong className="text-[#1d2130]">SHEIN</strong>, <strong className="text-[#1d2130]">Amazon</strong> ou <strong className="text-[#1d2130]">TEMU</strong> et déposez-la ici.
         </p>
 
         {/* Action Button */}
-        <div className="inline-flex items-center gap-2 hostinger-btn text-white px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-md transition-all">
+        <div className="inline-flex items-center gap-2 hostinger-btn px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm shadow-md transition-all">
           <ImageIcon className="w-4 h-4" />
-          <span>Sélectionner une photo / Galerie</span>
+          <span>Sélectionner depuis la galerie ou l'appareil</span>
         </div>
       </div>
     </div>

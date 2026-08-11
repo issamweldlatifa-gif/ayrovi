@@ -2,23 +2,27 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
     --hostinger-purple: #673de6;
     --hostinger-purple-hover: #5025d1;
     --hostinger-purple-light: #7e57ff;
-    --hostinger-purple-dark: #0c081a;
+    --hostinger-bg: #f8f9fe;
+    --hostinger-card: #ffffff;
+    --hostinger-text: #1d2130;
+    --hostinger-text-muted: #6b7280;
   }
 
   body {
     margin: 0;
     padding: 0;
-    background-color: #0c081a;
+    background-color: #f8f9fe;
     background-image: 
-      radial-gradient(at 0% 0%, rgba(103, 61, 230, 0.18) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(126, 87, 255, 0.12) 0px, transparent 50%),
-      radial-gradient(at 50% 100%, rgba(103, 61, 230, 0.08) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, rgba(103, 61, 230, 0.04) 0px, transparent 45%),
+      radial-gradient(at 100% 0%, rgba(126, 87, 255, 0.03) 0px, transparent 45%),
+      radial-gradient(at 50% 100%, rgba(103, 61, 230, 0.02) 0px, transparent 45%);
     background-attachment: fixed;
-    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1d2130;
+    font-family: 'Plus Jakarta Sans', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
 
@@ -29,11 +33,11 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0c081a;
+  background: #f1f3f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #281a4e;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 
@@ -41,28 +45,49 @@
   background: #673de6;
 }
 
-/* Hostinger Purple Glassmorphism */
-.glass-panel {
-  background: rgba(22, 14, 46, 0.75);
+/* Transparent Glass Header */
+.transparent-header {
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(103, 61, 230, 0.2);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
 }
 
-.glass-panel-glow {
-  background: rgba(24, 15, 52, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(126, 87, 255, 0.3);
-  box-shadow: 0 0 30px -5px rgba(103, 61, 230, 0.25);
+/* Clean White Card */
+.white-card {
+  background: #ffffff;
+  border: 1px solid #eef0f6;
+  box-shadow: 0 4px 20px -2px rgba(17, 24, 39, 0.05), 0 2px 6px -1px rgba(17, 24, 39, 0.02);
 }
 
+.white-card-hover {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.white-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -4px rgba(103, 61, 230, 0.08), 0 4px 12px -2px rgba(17, 24, 39, 0.03);
+  border-color: rgba(103, 61, 230, 0.25);
+}
+
+/* Hostinger Purple Action Button */
 .hostinger-btn {
-  background: linear-gradient(135deg, #673de6 0%, #7e57ff 100%);
-  transition: all 0.2s ease-in-out;
+  background-color: #673de6;
+  color: #ffffff;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hostinger-btn:hover {
-  background: linear-gradient(135deg, #5025d1 0%, #673de6 100%);
-  box-shadow: 0 0 20px rgba(103, 61, 230, 0.4);
+  background-color: #5025d1;
+  box-shadow: 0 4px 15px rgba(103, 61, 230, 0.35);
+  transform: translateY(-1px);
+}
+
+.hostinger-btn:active {
+  transform: translateY(0);
+}
+
+/* Slider Custom Styles */
+.slider-slide {
+  transition: opacity 0.5s ease-in-out;
 }

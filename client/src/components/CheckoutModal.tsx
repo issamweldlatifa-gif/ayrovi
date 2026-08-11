@@ -100,23 +100,23 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0c081a]/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
-      <div className="relative w-full max-w-lg bg-[#130d28] border border-[#332266] rounded-3xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6">
+      <div className="relative w-full max-w-lg bg-white border border-[#e2e8f0] rounded-3xl shadow-2xl overflow-hidden">
         
         {/* Header */}
-        <div className="p-5 sm:p-6 border-b border-[#332266] flex items-center justify-between bg-[#170e33]/90">
+        <div className="p-5 sm:p-6 border-b border-[#eef0f6] flex items-center justify-between bg-[#f8f9fe]">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-[#673de6]/20 border border-[#673de6]/30 flex items-center justify-center text-[#a384ff]">
+            <div className="w-10 h-10 rounded-xl bg-[#673de6]/10 border border-[#673de6]/20 flex items-center justify-center text-[#673de6]">
               <Truck className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-black text-white">Finaliser la Commande</h3>
-              <p className="text-xs text-slate-400 font-medium">Livraison express dans toute la Tunisie 🇹🇳</p>
+              <h3 className="text-base sm:text-lg font-bold text-[#1d2130]">Finaliser la Commande</h3>
+              <p className="text-xs text-[#6b7280] font-medium">Livraison express dans toute la Tunisie 🇹🇳</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-[#24164f] transition-colors"
+            className="p-2 rounded-xl text-[#6b7280] hover:text-[#1d2130] hover:bg-[#eef0f6] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -125,7 +125,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 text-xs text-red-400 font-semibold flex items-center gap-2">
+            <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-700 font-semibold flex items-center gap-2">
               <span>⚠️</span>
               <span>{error}</span>
             </div>
@@ -133,8 +133,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
           {/* Name */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-[#a384ff]" />
+            <label className="block text-xs font-bold text-[#374151] mb-1.5 flex items-center gap-1.5">
+              <User className="w-3.5 h-3.5 text-[#673de6]" />
               <span>Nom et Prénom :</span>
             </label>
             <input
@@ -143,14 +143,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="Ex : Anis Ben Ammar"
-              className="w-full bg-[#0c081a] border border-[#332266] focus:border-[#7e57ff] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white focus:outline-none placeholder:text-slate-500 font-semibold"
+              className="w-full bg-[#f8f9fe] border border-[#e2e8f0] focus:border-[#673de6] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-[#1d2130] focus:outline-none placeholder:text-[#9ca3af] font-semibold"
             />
           </div>
 
           {/* Phone */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-[#a384ff]" />
+            <label className="block text-xs font-bold text-[#374151] mb-1.5 flex items-center gap-1.5">
+              <Phone className="w-3.5 h-3.5 text-[#673de6]" />
               <span>Numéro de Téléphone (pour la livraison) :</span>
             </label>
             <input
@@ -159,20 +159,20 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               placeholder="+216 98 123 456"
-              className="w-full bg-[#0c081a] border border-[#332266] focus:border-[#7e57ff] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white focus:outline-none placeholder:text-slate-500 font-mono font-semibold"
+              className="w-full bg-[#f8f9fe] border border-[#e2e8f0] focus:border-[#673de6] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-[#1d2130] focus:outline-none placeholder:text-[#9ca3af] font-mono font-semibold"
             />
           </div>
 
           {/* Governorate */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-[#a384ff]" />
+            <label className="block text-xs font-bold text-[#374151] mb-1.5 flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-[#673de6]" />
               <span>Gouvernorat :</span>
             </label>
             <select
               value={formData.city}
               onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              className="w-full bg-[#0c081a] border border-[#332266] focus:border-[#7e57ff] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white focus:outline-none font-semibold"
+              className="w-full bg-[#f8f9fe] border border-[#e2e8f0] focus:border-[#673de6] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-[#1d2130] focus:outline-none font-semibold"
             >
               {TUNISIAN_GOVERNORATES_FR.map((gov) => (
                 <option key={gov} value={gov}>
@@ -182,9 +182,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             </select>
           </div>
 
-          {/* Address & Delegation */}
+          {/* Address */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1.5">
+            <label className="block text-xs font-bold text-[#374151] mb-1.5">
               Adresse complète, Ville et Code Postal :
             </label>
             <textarea
@@ -193,14 +193,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               value={formData.address}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               placeholder="Ex : Ennasr 2, Rue Hédi Nouira, Résidence l'Espoir Apt 4"
-              className="w-full bg-[#0c081a] border border-[#332266] focus:border-[#7e57ff] rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white focus:outline-none placeholder:text-slate-500 font-semibold resize-none"
+              className="w-full bg-[#f8f9fe] border border-[#e2e8f0] focus:border-[#673de6] rounded-xl px-3.5 py-2 text-xs sm:text-sm text-[#1d2130] focus:outline-none placeholder:text-[#9ca3af] font-semibold resize-none"
             />
           </div>
 
           {/* Payment Method */}
           <div>
-            <label className="block text-xs font-bold text-slate-300 mb-1.5 flex items-center gap-1.5">
-              <CreditCard className="w-3.5 h-3.5 text-[#a384ff]" />
+            <label className="block text-xs font-bold text-[#374151] mb-1.5 flex items-center gap-1.5">
+              <CreditCard className="w-3.5 h-3.5 text-[#673de6]" />
               <span>Mode de paiement :</span>
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -209,8 +209,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 onClick={() => setFormData({ ...formData, paymentMethod: 'cod' })}
                 className={`py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
                   formData.paymentMethod === 'cod'
-                    ? 'border-[#7e57ff] bg-[#673de6]/25 text-white'
-                    : 'border-[#332266] bg-[#0c081a] text-slate-400'
+                    ? 'border-[#673de6] bg-[#673de6]/10 text-[#673de6]'
+                    : 'border-[#e2e8f0] bg-[#f8f9fe] text-[#6b7280]'
                 }`}
               >
                 <span>💵 À la livraison</span>
@@ -220,8 +220,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 onClick={() => setFormData({ ...formData, paymentMethod: 'd17' })}
                 className={`py-2.5 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
                   formData.paymentMethod === 'd17'
-                    ? 'border-[#7e57ff] bg-[#673de6]/25 text-white'
-                    : 'border-[#332266] bg-[#0c081a] text-slate-400'
+                    ? 'border-[#673de6] bg-[#673de6]/10 text-[#673de6]'
+                    : 'border-[#e2e8f0] bg-[#f8f9fe] text-[#6b7280]'
                 }`}
               >
                 <span>📱 D17 / Virement / Flouci</span>
@@ -230,16 +230,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           </div>
 
           {/* Summary Box */}
-          <div className="bg-[#0c081a] border border-[#332266] rounded-xl p-3.5 flex justify-between items-center text-xs">
-            <span className="text-slate-400 font-semibold">Montant total dû à la réception :</span>
-            <span className="text-base font-black text-[#a384ff]">{totalTND.toFixed(2)} DT</span>
+          <div className="bg-[#f8f9fe] border border-[#eef0f6] rounded-xl p-3.5 flex justify-between items-center text-xs">
+            <span className="text-[#6b7280] font-semibold">Montant total dû à la réception :</span>
+            <span className="text-base font-extrabold text-[#673de6]">{totalTND.toFixed(2)} DT</span>
           </div>
 
           {/* Submit CTA */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full hostinger-btn disabled:opacity-50 text-white font-black py-3.5 px-6 rounded-2xl shadow-xl shadow-[#673de6]/30 flex items-center justify-center gap-2 text-xs sm:text-sm transition-all"
+            className="w-full hostinger-btn disabled:opacity-50 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md flex items-center justify-center gap-2 text-xs sm:text-sm transition-all"
           >
             {isLoading ? (
               <>
