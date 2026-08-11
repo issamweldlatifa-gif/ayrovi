@@ -1,30 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { TopAnnouncementBar } from './components/TopAnnouncementBar';
 import { Navbar } from './components/Navbar';
+import { MenuDrawer } from './components/MenuDrawer';
 import { HeroSlider } from './components/HeroSlider';
-import { ScreenshotUploader } from './components/ScreenshotUploader';
-import { LinkScraper } from './components/LinkScraper';
-import { ProductCard } from './components/ProductCard';
+import { PartnerBrandsSlider } from './components/PartnerBrandsSlider';
+import { AboutSection } from './components/AboutSection';
+import { BottomNavBar } from './components/BottomNavBar';
+import { ProductDrawer } from './components/ProductDrawer';
+import { AiAssistantDrawer } from './components/AiAssistantDrawer';
+import { ScrollToTopButton } from './components/ScrollToTopButton';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
 import { OrderSuccessModal } from './components/OrderSuccessModal';
 import { Footer } from './components/Footer';
 import { ScrapedProduct, CartItem, OrderResult } from './types';
-import { Camera, Link2, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'screenshot' | 'link'>('screenshot');
   const [extractedProduct, setExtractedProduct] = useState<ScrapedProduct | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const inputSectionRef = useRef<HTMLDivElement>(null);
+  // Drawer States (Mutually Exclusive)
+  const [isProductDrawerOpen, setIsProductDrawerOpen] = useState(false);
+  const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
+  const [isMenuDrawerOpen, setIsMenuDrawerOpen] = useState(false);
 
-  // Cart State
+  // Cart & Checkout State
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [orderResult, setOrderResult] = useState<OrderResult | null>(null);
 
-  // Session ID management
+  // Session ID Management
   const getSessionId = () => {
     let id = localStorage.getItem('ayrovi_session_id');
     if (!id) {
@@ -34,7 +41,7 @@ export const App: React.FC = () => {
     return id;
   };
 
-  // Fetch Cart Items from server
+  // Fetch Cart Items
   const fetchCart = async () => {
     try {
       const sessionId = getSessionId();
@@ -60,11 +67,33 @@ export const App: React.FC = () => {
   const handleExtracted = (product: ScrapedProduct) => {
     setExtractedProduct(product);
     setErrorMessage(null);
-    window.scrollTo({ top: 460, behavior: 'smooth' });
+    setIsAiDrawerOpen(false);
+    setIsMenuDrawerOpen(false);
+    setIsProductDrawerOpen(true);
   };
 
   const handleError = (msg: string) => {
     setErrorMessage(msg);
+  };
+
+  const handleToggleProductDrawer = () => {
+    if (isProductDrawerOpen) {
+      setIsProductDrawerOpen(false);
+    } else {
+      setIsAiDrawerOpen(false);
+      setIsMenuDrawerOpen(false);
+      setIsProductDrawerOpen(true);
+    }
+  };
+
+  const handleToggleAiDrawer = () => {
+    if (isAiDrawerOpen) {
+      setIsAiDrawerOpen(false);
+    } else {
+      setIsProductDrawerOpen(false);
+      setIsMenuDrawerOpen(false);
+      setIsAiDrawerOpen(true);
+    }
   };
 
   const handleAddToCart = async (itemData: any) => {
@@ -81,11 +110,14 @@ export const App: React.FC = () => {
       const data = await res.json();
       if (data.success) {
         await fetchCart();
-        setIsCartOpen(true);
       }
     } catch (err) {
       console.error('[Add to Cart Error]', err);
     }
+  };
+
+  const handleNewClientOrder = () => {
+    setExtractedProduct(null);
   };
 
   const handleUpdateQuantity = async (id: string, newQty: number) => {
@@ -112,6 +144,7 @@ export const App: React.FC = () => {
 
   const handleProceedToCheckout = () => {
     setIsCartOpen(false);
+    setIsProductDrawerOpen(false);
     setIsCheckoutOpen(true);
   };
 
@@ -121,105 +154,98 @@ export const App: React.FC = () => {
     setCartItems([]);
   };
 
-  const handleScrollToInput = () => {
-    inputSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <div className="min-h-screen flex flex-col justify-between text-[#1d2130] bg-[#f8f9fe]">
-      {/* Navbar with Transparent Glass Look */}
+    <div className="min-h-screen flex flex-col justify-between text-[#1d2130] bg-white relative pb-20 sm:pb-24">
+      
+      {/* Top Yellow Notice Bar */}
+      <TopAnnouncementBar onLearnMore={handleToggleProductDrawer} />
+
+      {/* Header: Left Menu, Center Fig Logo + AYROVI, Right Profile */}
       <Navbar
-        cartCount={totalCartCount}
-        cartTotal={totalCartTND}
-        onOpenCart={() => setIsCartOpen(true)}
+        onOpenMenuDrawer={() => setIsMenuDrawerOpen(true)}
       />
 
-      {/* Hero Carousel Slider */}
-      <HeroSlider onCtaClick={handleScrollToInput} />
+      {/* Sliding Side Menu Drawer */}
+      <MenuDrawer
+        isOpen={isMenuDrawerOpen}
+        onClose={() => setIsMenuDrawerOpen(false)}
+        onOpenProductDrawer={() => {
+          setIsMenuDrawerOpen(false);
+          setIsAiDrawerOpen(false);
+          setIsProductDrawerOpen(true);
+        }}
+        onOpenAiDrawer={() => {
+          setIsMenuDrawerOpen(false);
+          setIsProductDrawerOpen(false);
+          setIsAiDrawerOpen(true);
+        }}
+        onOpenCart={() => {
+          setIsMenuDrawerOpen(false);
+          setIsCartOpen(true);
+        }}
+      />
 
-      {/* Main Content Area */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-6 sm:space-y-8 flex-1">
-        
-        {/* Error Notification Banner */}
-        {errorMessage && (
-          <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl flex items-center justify-between text-xs sm:text-sm font-semibold max-w-2xl mx-auto shadow-xs">
+      {/* Big Impact Hero with 3 fashion photos & ONLY "Profitez de votre shopping maintenant" */}
+      <HeroSlider />
+
+      {/* Error Message Notification */}
+      {errorMessage && (
+        <div className="max-w-2xl mx-auto px-4 mt-6">
+          <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl flex items-center justify-between text-xs sm:text-sm font-semibold shadow-xs">
             <div className="flex items-center gap-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600" />
               <span>{errorMessage}</span>
             </div>
             <button
               onClick={() => setErrorMessage(null)}
-              className="text-red-600 hover:text-red-800 text-xs px-2 py-1 font-bold"
+              className="text-red-600 hover:text-red-800 text-xs px-2 py-1 font-bold cursor-pointer"
             >
               ✕
             </button>
           </div>
-        )}
-
-        {/* Input Switcher Tabs */}
-        <div ref={inputSectionRef} className="max-w-xl mx-auto pt-2">
-          <div className="bg-white border border-[#e2e8f0] p-1.5 rounded-2xl grid grid-cols-2 gap-1.5 shadow-xs">
-            <button
-              onClick={() => {
-                setActiveTab('screenshot');
-                setErrorMessage(null);
-              }}
-              className={`py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 ${
-                activeTab === 'screenshot'
-                  ? 'hostinger-btn text-white shadow-xs'
-                  : 'text-[#6b7280] hover:text-[#1d2130] hover:bg-[#f4f5fa]'
-              }`}
-            >
-              <Camera className="w-4 h-4" />
-              <span>Capture d'écran (Screenshot)</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setActiveTab('link');
-                setErrorMessage(null);
-              }}
-              className={`py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 ${
-                activeTab === 'link'
-                  ? 'hostinger-btn text-white shadow-xs'
-                  : 'text-[#6b7280] hover:text-[#1d2130] hover:bg-[#f4f5fa]'
-              }`}
-            >
-              <Link2 className="w-4 h-4" />
-              <span>Lien Direct</span>
-            </button>
-          </div>
         </div>
+      )}
 
-        {/* Active Input Component */}
-        <div className="max-w-2xl mx-auto">
-          {activeTab === 'screenshot' ? (
-            <ScreenshotUploader
-              onExtracted={handleExtracted}
-              onError={handleError}
-            />
-          ) : (
-            <LinkScraper
-              onExtracted={handleExtracted}
-              onError={handleError}
-            />
-          )}
-        </div>
+      {/* Partner Brands Marquee Slider Container with generous spacing */}
+      <PartnerBrandsSlider />
 
-        {/* Extracted Product Result */}
-        {extractedProduct && (
-          <div id="product-card-section" className="pt-2 max-w-3xl mx-auto">
-            <ProductCard
-              product={extractedProduct}
-              onAddToCart={handleAddToCart}
-              onReset={() => setExtractedProduct(null)}
-            />
-          </div>
-        )}
+      {/* About & Trust Section (3 Value Pillars) */}
+      <AboutSection />
 
-      </main>
+      {/* Hostinger-Style Full Footer with Fig Logo, Qui sommes-nous, Payment & Social Icons */}
+      <Footer />
 
-      {/* Cart Drawer */}
+      {/* Floating Scroll To Top FAB Button */}
+      <ScrollToTopButton />
+
+      {/* Instagram-Style Floating Transparent White Glass Bottom Nav Bar (AI Icon on Left, Lens Icon on Right) */}
+      <BottomNavBar
+        isAiDrawerOpen={isAiDrawerOpen}
+        isProductDrawerOpen={isProductDrawerOpen}
+        cartCount={totalCartCount}
+        onToggleAiDrawer={handleToggleAiDrawer}
+        onToggleProductDrawer={handleToggleProductDrawer}
+        onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onOpenCart={() => setIsCartOpen(true)}
+      />
+
+      {/* DRAWER 1: Complete 100% Height Product Flow Drawer (Lens Button) */}
+      <ProductDrawer
+        isOpen={isProductDrawerOpen}
+        product={extractedProduct}
+        onClose={() => setIsProductDrawerOpen(false)}
+        onAddToCart={handleAddToCart}
+        onExtracted={handleExtracted}
+        onNewClientOrder={handleNewClientOrder}
+      />
+
+      {/* DRAWER 2: AI Assistant "Rofio" Chat Drawer (1:1 ayrovi-interface.html) */}
+      <AiAssistantDrawer
+        isOpen={isAiDrawerOpen}
+        onClose={() => setIsAiDrawerOpen(false)}
+      />
+
+      {/* Slide-in Cart Drawer */}
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -239,14 +265,12 @@ export const App: React.FC = () => {
         onOrderSuccess={handleOrderSuccess}
       />
 
-      {/* Order Success Modal */}
+      {/* Order Success Confetti Modal */}
       <OrderSuccessModal
         result={orderResult}
         onClose={() => setOrderResult(null)}
       />
 
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

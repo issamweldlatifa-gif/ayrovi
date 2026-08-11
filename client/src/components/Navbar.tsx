@@ -1,68 +1,68 @@
-import React from 'react';
-import { ShoppingBag, ArrowRightLeft, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Menu, User } from 'lucide-react';
+import { FigLogoIcon } from './Icons';
 
 interface NavbarProps {
-  cartCount: number;
-  cartTotal: number;
-  onOpenCart: () => void;
+  onOpenMenuDrawer: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ cartCount, cartTotal, onOpenCart }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenMenuDrawer }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 w-full transparent-header">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3 sm:gap-6">
+    <header
+      className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+        isScrolled
+          ? 'bg-white border-b border-slate-200/90 shadow-sm text-[#1d2130]'
+          : 'bg-transparent text-white'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
         
-        {/* Brand Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-[#673de6] flex items-center justify-center font-black text-white text-xl shadow-md shadow-[#673de6]/25">
-            A
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#1d2130]">
-                AYROVI
-              </span>
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-[#673de6]/10 text-[#673de6] border border-[#673de6]/20">
-                <Sparkles className="w-2.5 h-2.5 mr-1" />
-                Tunisie 🇹🇳
-              </span>
-            </div>
-            <p className="text-[11px] text-[#6b7280] font-medium hidden xs:block">
-              Shopping International en Dinars Tunisiens
-            </p>
-          </div>
-        </div>
-
-        {/* Fixed Benchmark Exchange Rate Badge */}
-        <div className="hidden md:flex items-center gap-3 bg-[#f4f5fa] border border-[#e5e7eb] px-4 py-2 rounded-2xl text-xs font-semibold text-[#4b5563]">
-          <ArrowRightLeft className="w-4 h-4 text-[#673de6]" />
-          <div className="flex items-center gap-2">
-            <span>Taux de change garanti :</span>
-            <span className="text-[#1d2130] bg-white px-2.5 py-0.5 rounded-lg border border-[#e5e7eb] font-bold shadow-xs">
-              1 EUR / USD = 4.00 DT
-            </span>
-            <span className="text-[#1d2130] bg-white px-2.5 py-0.5 rounded-lg border border-[#e5e7eb] font-bold shadow-xs">
-              100 JPY = 2.65 DT
-            </span>
-          </div>
-        </div>
-
-        {/* Action Button: Cart */}
+        {/* LEFT (يسار): Menu Icon (Opens Side Drawer) */}
         <button
-          onClick={onOpenCart}
-          className="relative flex items-center gap-2.5 hostinger-btn active:scale-95 text-white px-4 sm:px-5 py-2.5 rounded-2xl font-bold text-xs sm:text-sm shadow-md transition-all"
+          onClick={onOpenMenuDrawer}
+          className={`w-10 h-10 sm:w-11 sm:h-11 rounded-2xl flex items-center justify-center transition-all shadow-xs cursor-pointer ${
+            isScrolled
+              ? 'bg-[#f8f9fe] text-[#1d2130] hover:bg-slate-200 border border-slate-200'
+              : 'bg-white/20 text-white hover:bg-white/30 border border-white/25 backdrop-blur-md'
+          }`}
+          aria-label="Menu"
+          title="Menu"
         >
-          <div className="relative">
-            <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 w-5 h-5 bg-white text-[#673de6] rounded-full text-[11px] font-black flex items-center justify-center shadow-md">
-                {cartCount}
-              </span>
-            )}
-          </div>
-          <div className="text-left hidden xs:block">
-            <span className="block text-[10px] text-purple-100 font-medium leading-none mb-0.5">Mon Panier</span>
-            <span className="block font-black leading-tight text-white">{cartTotal > 0 ? `${cartTotal.toFixed(2)} DT` : '0.00 DT'}</span>
+          <Menu className="w-5 h-5" />
+        </button>
+
+        {/* CENTER: AYROVI Logo with Vector Fig Icon */}
+        <div className="flex items-center gap-2.5">
+          <FigLogoIcon className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
+          <span
+            className={`text-2xl sm:text-3xl font-black tracking-tight transition-colors ${
+              isScrolled ? 'text-[#1d2130]' : 'text-white drop-shadow-md'
+            }`}
+          >
+            AYROVI
+          </span>
+        </div>
+
+        {/* RIGHT (يمين): Profile Avatar */}
+        <button
+          onClick={() => alert("Profil Client AYROVI — ID: " + (localStorage.getItem('ayrovi_session_id') || 'Client'))}
+          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full p-0.5 bg-gradient-to-tr from-[#ffc24b] to-[#ff6b9a] shadow-md hover:scale-105 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
+          title="Mon Profil AYROVI"
+          aria-label="Profil"
+        >
+          <div className="w-full h-full rounded-full bg-[#1e0b4b] flex items-center justify-center text-white">
+            <User className="w-5 h-5 text-[#ffc24b]" />
           </div>
         </button>
 
