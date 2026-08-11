@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { X, CheckCircle2, Truck, Loader2, Phone, MapPin, User, CreditCard } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X, AlertCircle, CheckCircle2, Truck, Loader2, Phone, MapPin, User, CreditCard } from 'lucide-react';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import { CustomerInfo, OrderResult } from '../types';
+import { getSessionId } from '../utils/session';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -54,6 +56,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useBodyScrollLock(isOpen);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !isLoading) onClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, isLoading, onClose]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -75,7 +90,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     try {
       const response = await fetch('/api/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-session-id': getSessionId(),
+        },
         body: JSON.stringify(formData),
       });
 
@@ -100,7 +118,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
       <div className="relative w-full max-w-lg bg-white border border-[#e2e8f0] rounded-3xl shadow-2xl overflow-hidden">
         
         {/* Header */}
@@ -110,13 +128,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <Truck className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-[#1d2130]">Finaliser la Commande</h3>
-              <p className="text-xs text-[#6b7280] font-medium">Livraison express dans toute la Tunisie 🇹🇳</p>
+              <h3 id="checkout-title" className="text-base sm:text-lg font-bold text-[#1d2130]">Finaliser la Commande</h3>
+              <p className="text-xs text-[#6b7280] font-medium">Livraison express dans toute la Tunisie</p>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-[#6b7280] hover:text-[#1d2130] hover:bg-[#eef0f6] transition-colors"
+            disabled={isLoading}
+            className="p-2 rounded-xl text-[#6b7280] hover:text-[#1d2130] hover:bg-[#eef0f6] transition-colors disabled:cursor-not-allowed disabled:opacity-40"
+            aria-label="Fermer la validation de commande"
           >
             <X className="w-5 h-5" />
           </button>
@@ -126,7 +147,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-700 font-semibold flex items-center gap-2">
-              <span>⚠️</span>
+              <AlertCircle className="h-4 w-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
@@ -213,7 +234,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     : 'border-[#e2e8f0] bg-[#f8f9fe] text-[#6b7280]'
                 }`}
               >
-                <span>💵 À la livraison</span>
+                <span>À la livraison</span>
               </button>
               <button
                 type="button"
@@ -224,7 +245,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     : 'border-[#e2e8f0] bg-[#f8f9fe] text-[#6b7280]'
                 }`}
               >
-                <span>📱 D17 / Virement / Flouci</span>
+                <span>D17 / Virement / Flouci</span>
               </button>
             </div>
           </div>

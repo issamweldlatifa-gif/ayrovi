@@ -13,12 +13,11 @@ import { CartDrawer } from './components/CartDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
 import { OrderSuccessModal } from './components/OrderSuccessModal';
 import { Footer } from './components/Footer';
-import { ScrapedProduct, CartItem, OrderResult } from './types';
-import { AlertCircle } from 'lucide-react';
+import { AddToCartPayload, AddToCartResult, ScrapedProduct, CartItem, OrderResult } from './types';
+import { getSessionId } from './utils/session';
 
 export const App: React.FC = () => {
   const [extractedProduct, setExtractedProduct] = useState<ScrapedProduct | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Drawer States (Mutually Exclusive)
   const [isProductDrawerOpen, setIsProductDrawerOpen] = useState(false);
@@ -31,16 +30,6 @@ export const App: React.FC = () => {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [orderResult, setOrderResult] = useState<OrderResult | null>(null);
 
-  // Session ID Management
-  const getSessionId = () => {
-    let id = localStorage.getItem('ayrovi_session_id');
-    if (!id) {
-      id = 'ayr_' + Math.random().toString(36).substring(2, 12);
-      localStorage.setItem('ayrovi_session_id', id);
-    }
-    return id;
-  };
-
   // Fetch Cart Items
   const fetchCart = async () => {
     try {
@@ -49,9 +38,10 @@ export const App: React.FC = () => {
         headers: { 'x-session-id': sessionId },
       });
       const data = await res.json();
-      if (data.success && data.items) {
-        setCartItems(data.items);
+      if (!res.ok || !data.success || !Array.isArray(data.items)) {
+        throw new Error(data.error || 'Impossible de charger le panier.');
       }
+      setCartItems(data.items);
     } catch (err) {
       console.warn('[Cart Fetch Error]', err);
     }
@@ -66,14 +56,9 @@ export const App: React.FC = () => {
 
   const handleExtracted = (product: ScrapedProduct) => {
     setExtractedProduct(product);
-    setErrorMessage(null);
     setIsAiDrawerOpen(false);
     setIsMenuDrawerOpen(false);
     setIsProductDrawerOpen(true);
-  };
-
-  const handleError = (msg: string) => {
-    setErrorMessage(msg);
   };
 
   const handleToggleProductDrawer = () => {
@@ -96,23 +81,28 @@ export const App: React.FC = () => {
     }
   };
 
-  const handleAddToCart = async (itemData: any) => {
-    const sessionId = getSessionId();
+  const handleAddToCart = async (itemData: AddToCartPayload): Promise<AddToCartResult | null> => {
     try {
       const res = await fetch('/api/cart/items', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-session-id': sessionId,
+          'x-session-id': getSessionId(),
         },
         body: JSON.stringify(itemData),
       });
       const data = await res.json();
-      if (data.success) {
-        await fetchCart();
+      if (
+        !res.ok || !data.success ||
+        !Number.isFinite(data.totalTND) || !Number.isInteger(data.totalItemsCount)
+      ) {
+        throw new Error(data.error || "Impossible d'ajouter l'article au panier.");
       }
+      await fetchCart();
+      return { totalTND: data.totalTND, itemCount: data.totalItemsCount };
     } catch (err) {
       console.error('[Add to Cart Error]', err);
+      return null;
     }
   };
 
@@ -122,11 +112,16 @@ export const App: React.FC = () => {
 
   const handleUpdateQuantity = async (id: string, newQty: number) => {
     try {
-      await fetch(`/api/cart/items/${id}`, {
+      const response = await fetch(`/api/cart/items/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-session-id': getSessionId(),
+        },
         body: JSON.stringify({ quantity: newQty }),
       });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.error || 'Mise à jour impossible.');
       await fetchCart();
     } catch (err) {
       console.error('[Update Qty Error]', err);
@@ -135,7 +130,12 @@ export const App: React.FC = () => {
 
   const handleRemoveItem = async (id: string) => {
     try {
-      await fetch(`/api/cart/items/${id}`, { method: 'DELETE' });
+      const response = await fetch(`/api/cart/items/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-session-id': getSessionId() },
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.error || 'Suppression impossible.');
       await fetchCart();
     } catch (err) {
       console.error('[Remove Item Error]', err);
@@ -162,7 +162,12 @@ export const App: React.FC = () => {
 
       {/* Header: Left Menu, Center Fig Logo + AYROVI, Right Profile */}
       <Navbar
-        onOpenMenuDrawer={() => setIsMenuDrawerOpen(true)}
+        onOpenMenuDrawer={() => {
+          setIsProductDrawerOpen(false);
+          setIsAiDrawerOpen(false);
+          setIsCartOpen(false);
+          setIsMenuDrawerOpen(true);
+        }}
       />
 
       {/* Sliding Side Menu Drawer */}
@@ -173,24 +178,6 @@ export const App: React.FC = () => {
 
       {/* Full-image fashion hero */}
       <HeroSlider />
-
-      {/* Error Message Notification */}
-      {errorMessage && (
-        <div className="max-w-2xl mx-auto px-4 mt-6">
-          <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl flex items-center justify-between text-xs sm:text-sm font-semibold shadow-xs">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-600" />
-              <span>{errorMessage}</span>
-            </div>
-            <button
-              onClick={() => setErrorMessage(null)}
-              className="text-red-600 hover:text-red-800 text-xs px-2 py-1 font-bold cursor-pointer"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Partner Brands Marquee Slider Container with generous spacing */}
       <PartnerBrandsSlider />
@@ -212,7 +199,12 @@ export const App: React.FC = () => {
         onToggleAiDrawer={handleToggleAiDrawer}
         onToggleProductDrawer={handleToggleProductDrawer}
         onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        onOpenCart={() => setIsCartOpen(true)}
+        onOpenCart={() => {
+          setIsProductDrawerOpen(false);
+          setIsAiDrawerOpen(false);
+          setIsMenuDrawerOpen(false);
+          setIsCartOpen(true);
+        }}
       />
 
       {/* DRAWER 1: Complete 100% Height Product Flow Drawer (Lens Button) */}
@@ -223,6 +215,7 @@ export const App: React.FC = () => {
         onAddToCart={handleAddToCart}
         onExtracted={handleExtracted}
         onNewClientOrder={handleNewClientOrder}
+        onOrderComplete={() => setCartItems([])}
       />
 
       {/* Modular AYROVI assistant interface */}

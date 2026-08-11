@@ -92,7 +92,7 @@ export const AssistantSideMenu: React.FC<AssistantSideMenuProps> = ({
               <User className="h-5 w-5" />
             </span>
             <span>
-              <strong className={`block text-base ${isDark ? 'text-zinc-100' : 'text-zinc-900'}`}>👋 Bonjour</strong>
+              <strong className={`block text-base ${isDark ? 'text-zinc-100' : 'text-zinc-900'}`}>Bonjour</strong>
               <small className="text-xs text-zinc-500">Ravi de vous revoir sur ayrovi</small>
             </span>
           </div>

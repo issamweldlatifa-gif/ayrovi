@@ -30,6 +30,24 @@ export interface ScrapedProduct {
   scrapedAt: string;
 }
 
+export interface AddToCartResult {
+  totalTND: number;
+  itemCount: number;
+}
+
+export interface AddToCartPayload {
+  store: StoreType;
+  externalId: string | null;
+  url: string;
+  title: string;
+  imageUrl: string;
+  sourcePrice: number;
+  sourceCurrency: string;
+  priceTND: number;
+  variant?: string;
+  quantity: number;
+}
+
 export interface CartItem {
   id: string;
   sessionId: string;

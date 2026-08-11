@@ -34,7 +34,7 @@ export const AssistantHeader: React.FC<AssistantHeaderProps> = ({
     : 'text-zinc-500 hover:bg-black/[0.045] hover:text-zinc-900';
 
   return (
-    <header className={`relative z-20 flex items-center justify-between px-[18px] pb-2 pt-5 ${isDark ? 'bg-[#1a1a1f]' : 'bg-[#fbfaf8]'}`}>
+    <header className={`relative z-20 flex items-center justify-between px-[18px] pb-2 pt-[max(1.25rem,env(safe-area-inset-top))] ${isDark ? 'bg-[#1a1a1f]' : 'bg-[#fbfaf8]'}`}>
       <button
         type="button"
         onClick={onOpenMenu}

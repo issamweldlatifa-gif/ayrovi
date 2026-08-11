@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface MenuDrawerProps {
   isOpen: boolean;
@@ -7,6 +8,17 @@ interface MenuDrawerProps {
 }
 
 export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose }) => {
+  useBodyScrollLock(isOpen);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -23,7 +35,7 @@ export const MenuDrawer: React.FC<MenuDrawerProps> = ({ isOpen, onClose }) => {
           <button
             type="button"
             onClick={onClose}
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-2xl border border-[#e4dbff] bg-[#f7f4ff] text-[#673de6] shadow-sm transition duration-300 hover:scale-105 hover:bg-[#eee8ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#673de6] focus-visible:ring-offset-2"
+            className="absolute right-4 top-[max(1rem,env(safe-area-inset-top))] flex h-10 w-10 items-center justify-center rounded-2xl border border-[#e4dbff] bg-[#f7f4ff] text-[#673de6] shadow-sm transition duration-300 hover:scale-105 hover:bg-[#eee8ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#673de6] focus-visible:ring-offset-2"
             title="Fermer"
             aria-label="Fermer le menu"
           >

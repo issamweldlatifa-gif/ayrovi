@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import { CartItem, AddToCartRequest } from '../types';
 
 export class QatafoDatabase {
@@ -67,20 +67,22 @@ export class QatafoDatabase {
     // Check duplicate
     if (item.externalId) {
       const existing = this.db.prepare(`
-        SELECT * FROM cart_items 
-        WHERE store = ? AND external_id = ? AND IFNULL(variant, '') = IFNULL(?, '')
-      `).get(item.store, item.externalId, item.variant || '') as any;
+        SELECT * FROM cart_items
+        WHERE session_id = ? AND store = ? AND external_id = ?
+          AND IFNULL(variant, '') = IFNULL(?, '')
+      `).get(sessionId, item.store, item.externalId, item.variant || '') as any;
 
       if (existing) {
         const newQty = existing.quantity + (item.quantity || 1);
+        if (newQty > 99) throw new RangeError('CART_QUANTITY_LIMIT');
         this.db.prepare(`
-          UPDATE cart_items SET quantity = ?, updated_at = ? WHERE id = ?
-        `).run(newQty, now, existing.id);
-        return this.getItemById(existing.id)!;
+          UPDATE cart_items SET quantity = ?, updated_at = ? WHERE id = ? AND session_id = ?
+        `).run(newQty, now, existing.id, sessionId);
+        return this.getItemById(existing.id, sessionId)!;
       }
     }
 
-    const id = 'qtf_' + uuidv4().substring(0, 8);
+    const id = 'ayr_' + randomUUID().substring(0, 8);
     this.db.prepare(`
       INSERT INTO cart_items (
         id, session_id, store, external_id, source_url, title, image_url,
@@ -103,44 +105,43 @@ export class QatafoDatabase {
       now
     );
 
-    return this.getItemById(id)!;
+    return this.getItemById(id, sessionId)!;
   }
 
-  public getItems(sessionId?: string): CartItem[] {
-    let rows: any[] = [];
-    if (sessionId) {
-      rows = this.db.prepare('SELECT * FROM cart_items WHERE session_id = ? ORDER BY created_at DESC').all(sessionId) as any[];
-    }
-    if (rows.length === 0) {
-      rows = this.db.prepare('SELECT * FROM cart_items ORDER BY created_at DESC').all() as any[];
-    }
-    return rows.map(r => this.mapRow(r));
+  public getItems(sessionId: string): CartItem[] {
+    const rows = this.db
+      .prepare('SELECT * FROM cart_items WHERE session_id = ? ORDER BY created_at DESC')
+      .all(sessionId) as any[];
+    return rows.map((row) => this.mapRow(row));
   }
 
-  public getItemById(id: string): CartItem | null {
-    const row = this.db.prepare('SELECT * FROM cart_items WHERE id = ?').get(id) as any;
+  public getItemById(id: string, sessionId: string): CartItem | null {
+    const row = this.db
+      .prepare('SELECT * FROM cart_items WHERE id = ? AND session_id = ?')
+      .get(id, sessionId) as any;
     return row ? this.mapRow(row) : null;
   }
 
-  public removeItem(id: string): boolean {
-    const res = this.db.prepare('DELETE FROM cart_items WHERE id = ?').run(id);
-    return res.changes > 0;
+  public removeItem(id: string, sessionId: string): boolean {
+    const result = this.db
+      .prepare('DELETE FROM cart_items WHERE id = ? AND session_id = ?')
+      .run(id, sessionId);
+    return result.changes > 0;
   }
 
-  public updateQuantity(id: string, quantity: number): CartItem | null {
+  public updateQuantity(id: string, quantity: number, sessionId: string): CartItem | null {
     if (quantity <= 0) {
-      this.removeItem(id);
+      this.removeItem(id, sessionId);
       return null;
     }
+
     const now = new Date().toISOString();
-    this.db.prepare('UPDATE cart_items SET quantity = ?, updated_at = ? WHERE id = ?').run(quantity, now, id);
-    return this.getItemById(id);
+    this.db.prepare('UPDATE cart_items SET quantity = ?, updated_at = ? WHERE id = ? AND session_id = ?')
+      .run(quantity, now, id, sessionId);
+    return this.getItemById(id, sessionId);
   }
 
-  public clearCart(sessionId?: string): number {
-    if (sessionId) {
-      return this.db.prepare('DELETE FROM cart_items WHERE session_id = ?').run(sessionId).changes;
-    }
-    return this.db.prepare('DELETE FROM cart_items').run().changes;
+  public clearCart(sessionId: string): number {
+    return this.db.prepare('DELETE FROM cart_items WHERE session_id = ?').run(sessionId).changes;
   }
 }

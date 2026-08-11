@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, Trash2, ShoppingBag, ArrowRight, Plus, Minus, Package } from 'lucide-react';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import { CartItem } from '../types';
 
 interface CartDrawerProps {
@@ -21,14 +22,27 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onRemoveItem,
   onProceedToCheckout,
 }) => {
+  useBodyScrollLock(isOpen);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-hidden" role="dialog" aria-modal="true" aria-label="Panier AYROVI">
       {/* Backdrop */}
-      <div
+      <button
+        type="button"
         onClick={onClose}
-        className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
+        className="absolute inset-0 h-full w-full cursor-default bg-slate-900/40 backdrop-blur-xs transition-opacity"
+        aria-label="Fermer le panier"
       />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pr-0 sm:pr-10">
@@ -46,8 +60,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </div>
             </div>
             <button
+              type="button"
               onClick={onClose}
               className="p-2 rounded-xl text-[#6b7280] hover:text-[#1d2130] hover:bg-[#eef0f6] transition-colors"
+              aria-label="Fermer le panier"
             >
               <X className="w-5 h-5" />
             </button>
@@ -87,9 +103,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         {item.store}
                       </span>
                       <button
+                        type="button"
                         onClick={() => onRemoveItem(item.id)}
                         className="text-[#9ca3af] hover:text-red-600 transition-colors p-1"
                         title="Supprimer"
+                        aria-label={`Supprimer ${item.title} du panier`}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -113,8 +131,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       {/* Quantity Controls */}
                       <div className="flex items-center gap-1.5 bg-white border border-[#e2e8f0] rounded-lg p-0.5 shadow-xs">
                         <button
+                          type="button"
                           onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
-                          className="w-6 h-6 rounded flex items-center justify-center text-[#6b7280] hover:text-[#1d2130] hover:bg-[#f4f5fa]"
+                          disabled={item.quantity <= 1}
+                          className="w-6 h-6 rounded flex items-center justify-center text-[#6b7280] hover:text-[#1d2130] hover:bg-[#f4f5fa] disabled:cursor-not-allowed disabled:opacity-35"
+                          aria-label={`Diminuer la quantité de ${item.title}`}
                         >
                           <Minus className="w-3 h-3" />
                         </button>
@@ -122,8 +143,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           {item.quantity}
                         </span>
                         <button
+                          type="button"
                           onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                          className="w-6 h-6 rounded flex items-center justify-center text-[#6b7280] hover:text-[#1d2130] hover:bg-[#f4f5fa]"
+                          disabled={item.quantity >= 99}
+                          className="w-6 h-6 rounded flex items-center justify-center text-[#6b7280] hover:text-[#1d2130] hover:bg-[#f4f5fa] disabled:cursor-not-allowed disabled:opacity-35"
+                          aria-label={`Augmenter la quantité de ${item.title}`}
                         >
                           <Plus className="w-3 h-3" />
                         </button>
@@ -144,6 +168,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </div>
 
               <button
+                type="button"
                 onClick={onProceedToCheckout}
                 className="w-full hostinger-btn text-white font-bold py-3.5 px-6 rounded-2xl shadow-md flex items-center justify-center gap-2 text-sm transition-all"
               >

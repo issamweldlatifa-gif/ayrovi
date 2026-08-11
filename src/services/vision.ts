@@ -1,7 +1,7 @@
 import Tesseract from 'tesseract.js';
 import path from 'path';
 import fs from 'fs';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import { ScrapedProduct, StoreType } from '../types';
 
 export class VisualProductExtractor {
@@ -22,7 +22,7 @@ export class VisualProductExtractor {
     }
 
     const fileExt = originalFilename ? path.extname(originalFilename) : '.jpg';
-    const filename = `shot_${uuidv4().substring(0, 8)}${fileExt || '.jpg'}`;
+    const filename = `shot_${randomUUID().substring(0, 8)}${fileExt || '.jpg'}`;
     const filePath = path.join(tempDir, filename);
 
     fs.writeFileSync(filePath, imageBuffer);

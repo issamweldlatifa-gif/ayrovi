@@ -46,7 +46,7 @@ export const AssistantAttachmentSheet: React.FC<AssistantAttachmentSheetProps> =
   return (
     <>
       <button type="button" onClick={onClose} className="absolute inset-0 z-40 bg-black/45 backdrop-blur-[2px]" aria-label="Fermer" />
-      <section className={`assistant-sheet absolute inset-x-0 bottom-0 z-50 max-h-[82%] overflow-y-auto rounded-t-[28px] px-5 pb-7 pt-2 shadow-[0_-12px_32px_rgba(20,20,30,0.16)] ${isDark ? 'bg-[#232329]' : 'bg-white'}`}>
+      <section className={`assistant-sheet absolute inset-x-0 bottom-0 z-50 max-h-[82%] overflow-y-auto rounded-t-[28px] px-5 pt-2 pb-[max(1.75rem,env(safe-area-inset-bottom))] shadow-[0_-12px_32px_rgba(20,20,30,0.16)] ${isDark ? 'bg-[#232329]' : 'bg-white'}`} role="dialog" aria-modal="true" aria-label="Ajouter au chat">
         <div className={`mx-auto my-2 h-1 w-10 rounded-full ${isDark ? 'bg-zinc-700' : 'bg-zinc-200'}`} />
         <div className="relative mb-5 flex items-center justify-center">
           <h2 className={`text-base font-bold ${isDark ? 'text-zinc-100' : 'text-zinc-900'}`}>Ajouter au chat</h2>

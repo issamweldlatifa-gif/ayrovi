@@ -16,10 +16,10 @@ interface AssistantMessagesProps {
 }
 
 const QUICK_PROMPTS = [
-  { label: '💶 Taux de change', prompt: 'Quel est le taux de change AYROVI ?' },
-  { label: '👗 Commander sur SHEIN', prompt: 'Comment commander sur SHEIN ?' },
-  { label: '🚚 Délais de livraison', prompt: 'Quels sont les délais de livraison en Tunisie ?' },
-  { label: '📦 Suivre ma commande', prompt: 'Je veux suivre ma commande.' },
+  { label: 'Taux de change', prompt: 'Quel est le taux de change AYROVI ?' },
+  { label: 'Commander sur SHEIN', prompt: 'Comment commander sur SHEIN ?' },
+  { label: 'Délais de livraison', prompt: 'Quels sont les délais de livraison en Tunisie ?' },
+  { label: 'Suivre ma commande', prompt: 'Je veux suivre ma commande.' },
 ];
 
 export const AssistantMessages: React.FC<AssistantMessagesProps> = ({

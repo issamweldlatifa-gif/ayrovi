@@ -4,6 +4,7 @@ import { AssistantComposer } from './AssistantComposer';
 import { AssistantHeader } from './AssistantHeader';
 import { AssistantMessages } from './AssistantMessages';
 import { AssistantSideMenu } from './AssistantSideMenu';
+import { useBodyScrollLock } from '../../hooks/useBodyScrollLock';
 import { AssistantAttachment, AssistantMessage, FeedbackValue } from './types';
 
 interface AiAssistantDrawerProps {
@@ -12,6 +13,7 @@ interface AiAssistantDrawerProps {
 }
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_ATTACHMENTS = 4;
 
 const createReply = (message: string, webSearchEnabled: boolean) => {
   const text = message.toLowerCase();
@@ -50,7 +52,11 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
 
   const replyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copiedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const recordTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pageRef = useRef<HTMLElement>(null);
+
+  useBodyScrollLock(isOpen);
 
   const showToast = (message: string) => {
     setToast(message);
@@ -83,8 +89,7 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
 
   useEffect(() => {
     if (!isOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    window.requestAnimationFrame(() => pageRef.current?.focus({ preventScroll: true }));
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         if (isAttachmentSheetOpen) setIsAttachmentSheetOpen(false);
@@ -94,7 +99,6 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
     };
     window.addEventListener('keydown', handleEscape);
     return () => {
-      document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleEscape);
     };
   }, [isOpen, isAttachmentSheetOpen, isMenuOpen, onClose]);
@@ -125,7 +129,18 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
   useEffect(() => () => {
     if (replyTimerRef.current) clearTimeout(replyTimerRef.current);
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    if (recordTimerRef.current) clearInterval(recordTimerRef.current);
   }, []);
+
+  const handleCloseAssistant = () => {
+    stopGeneration();
+    setIsRecording(false);
+    setRecordSeconds(0);
+    setIsMenuOpen(false);
+    setIsAttachmentSheetOpen(false);
+    onClose();
+  };
 
   if (!isOpen) return null;
 
@@ -172,6 +187,10 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
   };
 
   const handleFilePicked = (file: File, kind: 'image' | 'file') => {
+    if (attachments.length >= MAX_ATTACHMENTS) {
+      showToast(`Maximum ${MAX_ATTACHMENTS} pièces jointes`);
+      return;
+    }
     if (file.size > MAX_FILE_SIZE) {
       showToast('Fichier trop volumineux (max 10 Mo)');
       return;
@@ -198,11 +217,19 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
     }
   };
 
-  const handleCopy = (message: AssistantMessage) => {
-    navigator.clipboard?.writeText(message.text).catch(() => undefined);
-    setCopiedId(message.id);
-    showToast('Réponse copiée');
-    setTimeout(() => setCopiedId(null), 1800);
+  const handleCopy = async (message: AssistantMessage) => {
+    try {
+      await navigator.clipboard.writeText(message.text);
+      setCopiedId(message.id);
+      showToast('Réponse copiée');
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+      copiedTimerRef.current = setTimeout(() => {
+        setCopiedId(null);
+        copiedTimerRef.current = null;
+      }, 1800);
+    } catch {
+      showToast('Copie indisponible dans ce navigateur');
+    }
   };
 
   const handleRegenerate = (messageId: string) => {
@@ -231,14 +258,22 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
   };
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-end justify-center overflow-hidden" dir="ltr">
-      <button type="button" onClick={onClose} className="absolute inset-0 bg-[#111016]/55 backdrop-blur-[3px]" aria-label="Fermer l’assistant" />
-
-      <section className={`assistant-panel relative flex h-[96dvh] w-full max-w-[620px] flex-col overflow-hidden rounded-t-[30px] shadow-[0_24px_60px_rgba(15,15,20,0.3)] sm:h-[92dvh] ${isDark ? 'bg-[#1a1a1f]' : 'bg-[#fbfaf8]'}`} aria-label="Assistant AYROVI">
+    <div
+      className={`fixed inset-0 z-[80] overflow-hidden ${isDark ? 'bg-[#1a1a1f]' : 'bg-[#fbfaf8]'}`}
+      dir="ltr"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Assistant AYROVI"
+    >
+      <section
+        ref={pageRef}
+        tabIndex={-1}
+        className={`relative flex h-screen h-[100dvh] min-h-0 w-full flex-col overflow-hidden outline-none ${isDark ? 'bg-[#1a1a1f]' : 'bg-[#fbfaf8]'}`}
+      >
         <AssistantHeader
           isDark={isDark}
           onOpenMenu={() => setIsMenuOpen(true)}
-          onClose={onClose}
+          onClose={handleCloseAssistant}
           onShare={handleShare}
           onRename={() => showToast('La discussion a été renommée')}
           onDelete={() => { resetConversation(); showToast('Discussion supprimée'); }}

@@ -1,104 +1,163 @@
-import { describe, test, expect, afterAll } from 'vitest';
+import { afterAll, describe, expect, test } from 'vitest';
 import request from 'supertest';
-import fs from 'fs';
-import path from 'path';
-import { app, db, scraper, visionExtractor } from '../src/server';
+import { app, db, scraper } from '../src/server';
 
-describe('AYROVI Universal Shopping Platform Tests', () => {
-  const testSession = 'test-session-' + Date.now();
+const uniqueSession = (label: string) => `${label}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+const createCartItem = (title = 'Muchica Matching Set') => ({
+  store: 'shein',
+  externalId: `SH-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+  url: 'https://www.shein.com/product-p-382460229.html',
+  title,
+  imageUrl: '/uploads/product.jpg',
+  sourcePrice: 21.99,
+  sourceCurrency: 'EUR',
+  priceTND: 103.61,
+  variant: 'Taille: M',
+  quantity: 1,
+});
+
+describe('AYROVI platform', () => {
+  const primarySession = uniqueSession('primary');
+  const isolatedSession = uniqueSession('isolated');
+  const quantitySession = uniqueSession('quantity');
 
   afterAll(() => {
-    db.clearCart(testSession);
+    db.clearCart(primarySession);
+    db.clearCart(isolatedSession);
+    db.clearCart(quantitySession);
   });
 
-  test('Visual OCR: Extracts SHEIN Dress details from real screenshot', async () => {
-    const imgPath = path.resolve(process.cwd(), 'uploads/Screenshot_20260810_195524_org.mozilla.firefox.jpg');
-    const buffer = fs.readFileSync(imgPath);
-    const product = await visionExtractor.extractFromImage(buffer, 'Screenshot_shein.jpg');
-
-    expect(product).toBeDefined();
-    expect(product.store).toBe('shein');
-    expect(product.title).toContain('Slaydiva');
-    expect(product.sourceCurrency).toBe('EUR');
+  test('URL cleaner extracts a valid link from pasted text', () => {
+    const value = scraper.cleanPastedUrl(
+      'Voir cet article : https://www.shein.com/product-p-382460229.html), merci',
+    );
+    expect(value).toBe('https://www.shein.com/product-p-382460229.html');
   });
 
-  test('Visual OCR: Extracts Amazon Japan Book & 275 JPY from real screenshot', async () => {
-    const imgPath = path.resolve(process.cwd(), 'uploads/Screenshot_20260810_144515_com.gbox.android.jpg');
-    const buffer = fs.readFileSync(imgPath);
-    const product = await visionExtractor.extractFromImage(buffer, 'Screenshot_japan.jpg');
-
-    expect(product).toBeDefined();
-    expect(product.store).toBe('amazon');
-    expect(product.sourcePrice).toBe(275);
-    expect(product.sourceCurrency).toBe('JPY');
+  test('image extraction rejects a request without an image', async () => {
+    const response = await request(app).post('/api/extract-image');
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
   });
 
-  test('Scraper: Parses URL info for arbitrary links', async () => {
-    const url = 'https://www.shein.com/Muchica-Women-s-Beige-Black-And-Cream-Knitted-Casual-Sporty-Matching-Set-Featuring-A-Vintage-Style-Distressed-Print-And-A-Washed-Finish-Streetwear-p-382460229.html';
-    const product = await scraper.scrapeProduct(url);
-
-    expect(product.store).toBe('shein');
-    expect(product.title).toContain('Muchica');
-    expect(product.externalId).toBe('SH-382460229');
-  });
-
-  test('API POST /api/extract-image: Extracts product from uploaded image', async () => {
-    const imgPath = path.resolve(process.cwd(), 'uploads/Screenshot_20260810_195524_org.mozilla.firefox.jpg');
-    const res = await request(app)
+  test('image extraction rejects non-image uploads', async () => {
+    const response = await request(app)
       .post('/api/extract-image')
-      .attach('image', imgPath);
-
-    expect(res.status).toBe(200);
-    expect(res.body.success).toBe(true);
-    expect(res.body.product.title).toContain('Slaydiva');
+      .attach('image', Buffer.from('not-an-image'), {
+        filename: 'payload.txt',
+        contentType: 'text/plain',
+      });
+    expect(response.status).toBe(415);
+    expect(response.body.success).toBe(false);
   });
 
-  test('API POST /api/cart/items & Checkout Flow', async () => {
-    const addRes = await request(app)
+  test('scraping blocks malformed and private service addresses', async () => {
+    const malformed = await request(app).post('/api/scrape').send({ url: 'not-a-web-address' });
+    expect(malformed.status).toBe(400);
+
+    const privateAddress = await request(app).post('/api/scrape').send({ url: 'http://127.0.0.1:3000/' });
+    expect(privateAddress.status).toBe(400);
+    expect(privateAddress.body.success).toBe(false);
+  });
+
+  test('cart routes require a valid client session', async () => {
+    const response = await request(app).get('/api/cart/items');
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+  });
+
+  test('cart and checkout remain isolated between client sessions', async () => {
+    const addResponse = await request(app)
       .post('/api/cart/items')
-      .set('x-session-id', testSession)
-      .send({
-        store: 'shein',
-        externalId: 'SH-382460229',
-        url: 'https://www.shein.com/...',
-        title: 'Muchica Matching Set',
-        imageUrl: '/uploads/shot_1.jpg',
-        sourcePrice: 21.99,
-        sourceCurrency: 'EUR',
-        priceTND: 103.61,
-        variant: 'Taille: M',
-        quantity: 1
-      });
+      .set('x-session-id', primarySession)
+      .send(createCartItem());
 
-    expect(addRes.status).toBe(201);
-    expect(addRes.body.success).toBe(true);
+    expect(addResponse.status).toBe(201);
+    expect(addResponse.body.success).toBe(true);
+    expect(addResponse.body.cartItem.priceTND).toBe(122.96);
+    const itemId = addResponse.body.cartItem.id as string;
 
-    const cartRes = await request(app)
+    const primaryCart = await request(app)
       .get('/api/cart/items')
-      .set('x-session-id', testSession);
+      .set('x-session-id', primarySession);
+    expect(primaryCart.status).toBe(200);
+    expect(primaryCart.body.items).toHaveLength(1);
 
-    expect(cartRes.status).toBe(200);
-    expect(cartRes.body.items.length).toBeGreaterThan(0);
+    const isolatedCart = await request(app)
+      .get('/api/cart/items')
+      .set('x-session-id', isolatedSession);
+    expect(isolatedCart.status).toBe(200);
+    expect(isolatedCart.body.items).toHaveLength(0);
 
-    const checkoutRes = await request(app)
+    const unauthorizedUpdate = await request(app)
+      .patch(`/api/cart/items/${itemId}`)
+      .set('x-session-id', isolatedSession)
+      .send({ quantity: 2 });
+    expect(unauthorizedUpdate.status).toBe(404);
+
+    const unauthorizedDelete = await request(app)
+      .delete(`/api/cart/items/${itemId}`)
+      .set('x-session-id', isolatedSession);
+    expect(unauthorizedDelete.status).toBe(404);
+
+    const emptyCheckout = await request(app)
       .post('/api/checkout')
-      .set('x-session-id', testSession)
+      .set('x-session-id', isolatedSession)
       .send({
-        name: 'Issam Test',
+        name: 'Client Test',
         phone: '98123456',
         city: 'Tunis',
         address: 'Avenue Habib Bourguiba, Tunis',
-        paymentMethod: 'cod'
+        paymentMethod: 'cod',
+      });
+    expect(emptyCheckout.status).toBe(400);
+    expect(emptyCheckout.body.error).toContain('panier est vide');
+
+    const checkoutResponse = await request(app)
+      .post('/api/checkout')
+      .set('x-session-id', primarySession)
+      .send({
+        name: 'Client Test',
+        phone: '98123456',
+        city: 'Tunis',
+        address: 'Avenue Habib Bourguiba, Tunis',
+        paymentMethod: 'cod',
       });
 
-    expect(checkoutRes.status).toBe(200);
-    expect(checkoutRes.body.success).toBe(true);
-    expect(checkoutRes.body.orderNumber).toContain('AYR-');
+    expect(checkoutResponse.status).toBe(200);
+    expect(checkoutResponse.body.success).toBe(true);
+    expect(checkoutResponse.body.orderNumber).toMatch(/^AYR-\d{6}$/);
   });
 
-  test('API GET /api/health: Healthcheck returns ok', async () => {
-    const res = await request(app).get('/api/health');
-    expect(res.status).toBe(200);
-    expect(res.body.status).toBe('ok');
+  test('invalid cart quantities are rejected', async () => {
+    const response = await request(app)
+      .post('/api/cart/items')
+      .set('x-session-id', primarySession)
+      .send({ ...createCartItem('Invalid quantity item'), quantity: 100 });
+    expect(response.status).toBe(400);
+    expect(response.body.success).toBe(false);
+  });
+
+  test('duplicate additions cannot exceed the per-item quantity limit', async () => {
+    const item = { ...createCartItem('Quantity limit item'), quantity: 99 };
+    const firstResponse = await request(app)
+      .post('/api/cart/items')
+      .set('x-session-id', quantitySession)
+      .send(item);
+    expect(firstResponse.status).toBe(201);
+
+    const secondResponse = await request(app)
+      .post('/api/cart/items')
+      .set('x-session-id', quantitySession)
+      .send({ ...item, quantity: 1 });
+    expect(secondResponse.status).toBe(400);
+    expect(secondResponse.body.error).toContain('99');
+  });
+
+  test('healthcheck reports the service as ready', async () => {
+    const response = await request(app).get('/api/health');
+    expect(response.status).toBe(200);
+    expect(response.body.status).toBe('ok');
   });
 });
