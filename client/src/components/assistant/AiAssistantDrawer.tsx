@@ -16,7 +16,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const createReply = (message: string, webSearchEnabled: boolean) => {
   const text = message.toLowerCase();
   if (text.includes('taux') || text.includes('change') || text.includes('euro') || text.includes('dollar')) {
-    return 'Le taux AYROVI est fixe : 1 EUR = 4.00 DT et 1 USD = 4.00 DT. Le montant final est affiché clairement avant la confirmation de votre commande.';
+    return 'Le taux AYROVI est fixe et le montant final est affiché clairement avant la confirmation. Consultez la liste « Taux & Transparence » en bas de la page pour les valeurs à jour.';
   }
   if (text.includes('shein') || text.includes('amazon') || text.includes('temu') || text.includes('aliexpress')) {
     return 'Pour commander, ouvrez Lens depuis la barre inférieure, ajoutez une capture d’écran ou collez le lien du produit. AYROVI calcule ensuite votre total en Dinars Tunisiens.';
@@ -25,7 +25,7 @@ const createReply = (message: string, webSearchEnabled: boolean) => {
     return 'AYROVI livre dans les 24 gouvernorats. Le délai indicatif est généralement de 5 à 8 jours ouvrés, selon la boutique et la disponibilité de l’article.';
   }
   if (text.includes('commande') || text.includes('suivi') || text.includes('référence')) {
-    return 'Envoyez-moi votre référence AYR-2026-XXXX pour vérifier votre commande. Vous pouvez aussi ouvrir « Suivre une commande » depuis le menu.';
+    return 'Envoyez-moi votre référence AYR-2026-XXXX pour vérifier votre commande et obtenir les informations de suivi disponibles.';
   }
   if (text.includes('image') || text.includes('photo') || text.includes('capture')) {
     return 'Image reçue. Pour extraire automatiquement le produit et son prix, utilisez également l’outil Lens accessible depuis la barre de navigation AYROVI.';

@@ -169,20 +169,6 @@ export const App: React.FC = () => {
       <MenuDrawer
         isOpen={isMenuDrawerOpen}
         onClose={() => setIsMenuDrawerOpen(false)}
-        onOpenProductDrawer={() => {
-          setIsMenuDrawerOpen(false);
-          setIsAiDrawerOpen(false);
-          setIsProductDrawerOpen(true);
-        }}
-        onOpenAiDrawer={() => {
-          setIsMenuDrawerOpen(false);
-          setIsProductDrawerOpen(false);
-          setIsAiDrawerOpen(true);
-        }}
-        onOpenCart={() => {
-          setIsMenuDrawerOpen(false);
-          setIsCartOpen(true);
-        }}
       />
 
       {/* Full-image fashion hero */}

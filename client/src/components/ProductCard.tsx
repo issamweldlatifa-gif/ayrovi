@@ -162,7 +162,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
                 <span>Prix original sur le site source :</span>
               </span>
               <span className="text-[11px] text-[#673de6] font-bold">
-                (1 EUR/USD = 4.00 DT)
+                Conversion AYROVI appliquée
               </span>
             </div>
 
@@ -193,10 +193,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, 
                   onChange={(e) => setCurrency(e.target.value)}
                   className="w-full bg-white border border-[#e2e8f0] focus:border-[#673de6] rounded-xl px-3.5 py-2.5 text-sm font-bold text-[#1d2130] focus:outline-none shadow-xs"
                 >
-                  <option value="EUR">Euro (€ EUR) — 4.00 DT</option>
-                  <option value="USD">Dollar ($ USD) — 4.00 DT</option>
-                  <option value="JPY">Yen Japonais (¥ JPY) — 2.65 DT / 100 JPY</option>
-                  <option value="GBP">Livre Sterling (£ GBP) — 4.80 DT</option>
+                  <option value="EUR">Euro (€ EUR)</option>
+                  <option value="USD">Dollar ($ USD)</option>
+                  <option value="JPY">Yen Japonais (¥ JPY)</option>
+                  <option value="GBP">Livre Sterling (£ GBP)</option>
                 </select>
               </div>
             </div>

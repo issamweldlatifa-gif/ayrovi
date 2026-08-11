@@ -7,7 +7,7 @@ const BENEFITS = [
     step: '01',
     title: 'Taux Fixe & Garanti',
     description:
-      '1 Euro = 4.00 DT et 1 Dollar = 4.00 DT. Vous connaissez le montant exact en Dinars dès la validation de votre panier.',
+      'Un taux clair et garanti vous permet de connaître le montant exact en Dinars dès la validation de votre panier.',
     icon: ArrowRightLeft,
     iconClassName: 'bg-[#ffc24b] text-[#1d2130]',
     accentClassName: 'from-[#ffc24b] to-[#ff9f43]',
@@ -55,7 +55,7 @@ export const AboutSection: React.FC = () => {
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/75 to-transparent" />
       </div>
 
-      <div className="relative z-10 -mt-[100svh] mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 -mt-[100svh] w-full px-4 sm:px-6 lg:px-8">
         {/* Intro occupies its own parallax screen. */}
         <header className="flex min-h-[92svh] items-end justify-center pb-20 pt-28 sm:justify-end sm:pb-24">
           <div className="w-full rounded-[30px] border border-white/80 bg-white/90 px-6 py-8 text-center shadow-[0_32px_90px_-30px_rgba(23,83,119,0.42)] backdrop-blur-xl sm:max-w-[620px] sm:rounded-[38px] sm:px-10 sm:py-10 lg:px-12">
@@ -80,7 +80,7 @@ export const AboutSection: React.FC = () => {
         {BENEFITS.map(({ step, title, description, icon: Icon, iconClassName, accentClassName }, index) => (
           <React.Fragment key={title}>
             <article className="flex min-h-[92svh] items-center justify-center py-16 sm:justify-end sm:py-20">
-              <div className="relative w-full overflow-hidden rounded-[30px] border border-white/85 bg-white/90 p-7 shadow-[0_30px_80px_-28px_rgba(12,65,94,0.45)] backdrop-blur-xl sm:max-w-[560px] sm:rounded-[36px] sm:p-10">
+              <div className="relative w-full overflow-hidden rounded-[30px] border border-white/85 bg-white/85 p-7 shadow-[0_30px_80px_-28px_rgba(12,65,94,0.45)] backdrop-blur-xl transition-[transform,box-shadow,background-color] duration-500 ease-out hover:-translate-y-1 hover:bg-white/90 hover:shadow-[0_38px_90px_-30px_rgba(12,65,94,0.55)] sm:rounded-[36px] sm:p-10 lg:p-14">
                 <div className={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${accentClassName}`} />
 
                 <div className="flex items-start justify-between gap-5">

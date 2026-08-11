@@ -263,7 +263,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
                 {step === 'checkout' && "Livraison & Coordonnées"}
                 {step === 'success' && "Commande Confirmée"}
               </h3>
-              <p className="text-[11px] text-[#6b7280] font-medium">Taux garanti : 1 EUR/USD = 4.00 DT</p>
+              <p className="text-[11px] text-[#6b7280] font-medium">Conversion transparente et garantie</p>
             </div>
           </div>
 
@@ -429,7 +429,7 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
                     <span>Prix original sur le site :</span>
                   </span>
                   <span className="text-xs font-extrabold text-[#673de6]">
-                    1 EUR/USD = 4.00 DT
+                    Conversion AYROVI
                   </span>
                 </div>
 
@@ -458,10 +458,10 @@ export const ProductDrawer: React.FC<ProductDrawerProps> = ({
                       onChange={(e) => setCurrency(e.target.value)}
                       className="w-full bg-white border border-slate-200 focus:border-[#673de6] rounded-xl px-3 py-2 text-xs font-bold text-[#1d2130] focus:outline-none shadow-xs"
                     >
-                      <option value="EUR">Euro (€ EUR) — 4.00 DT</option>
-                      <option value="USD">Dollar ($ USD) — 4.00 DT</option>
-                      <option value="JPY">Yen (¥ JPY) — 2.65 DT / 100</option>
-                      <option value="GBP">Livre (£ GBP) — 4.80 DT</option>
+                      <option value="EUR">Euro (€ EUR)</option>
+                      <option value="USD">Dollar ($ USD)</option>
+                      <option value="JPY">Yen (¥ JPY)</option>
+                      <option value="GBP">Livre (£ GBP)</option>
                     </select>
                   </div>
                 </div>

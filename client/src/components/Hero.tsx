@@ -9,7 +9,7 @@ export const Hero: React.FC = () => {
 
       {/* Top Banner Tag */}
       <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#673de6]/15 border border-[#673de6]/30 text-[#a384ff] text-xs sm:text-sm font-bold mb-4 shadow-sm">
-        <span>Taux de conversion fixe : 1 EUR / USD = 4.00 DT</span>
+        <span>Taux de conversion clair et garanti</span>
       </div>
 
       {/* Main Title */}

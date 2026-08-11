@@ -8,7 +8,7 @@ interface TopAnnouncementBarProps {
 export const TopAnnouncementBar: React.FC<TopAnnouncementBarProps> = ({ onLearnMore }) => {
   return (
     <div className="bg-[#fbbf24] text-[#1d2130] py-2 px-4 text-center text-xs sm:text-sm font-bold tracking-tight z-50 relative flex items-center justify-center gap-2">
-      <span>Taux fixe garanti : <strong>1 EUR / USD = 4.00 DT</strong> — Dédouanement & Livraison 24 Gouvernorats</span>
+      <span><strong>Taux fixe garanti</strong> — Dédouanement inclus & livraison dans les 24 gouvernorats</span>
       {onLearnMore && (
         <button
           onClick={onLearnMore}

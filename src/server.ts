@@ -55,7 +55,7 @@ app.get('/api/health', (_req, res) => {
     service: 'AYROVI Universal Shopping & Vision Platform',
     version: '3.0.0',
     framework: 'React 18 + Vite + TypeScript + Express',
-    features: ['Link Scraper', 'Visual Screenshot OCR', 'Dynamic Pricing (1 EUR/USD = 4.00 DT)', 'Unified Cart'],
+    features: ['Link Scraper', 'Visual Screenshot OCR', 'Dynamic Pricing', 'Unified Cart'],
     supportedStores: ['SHEIN', 'Amazon', 'TEMU', 'AliExpress']
   });
 });

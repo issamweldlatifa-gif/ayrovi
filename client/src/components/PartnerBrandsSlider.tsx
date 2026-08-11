@@ -41,7 +41,7 @@ export const PartnerBrandsSlider: React.FC = () => {
       </div>
 
       {/* Large black brands slider */}
-      <div className="relative mx-auto max-w-[1440px] overflow-hidden bg-black py-10 shadow-[0_30px_80px_-35px_rgba(0,0,0,0.65)] sm:rounded-[38px] sm:py-14">
+      <div className="relative w-full overflow-hidden bg-black py-10 shadow-[0_30px_80px_-35px_rgba(0,0,0,0.65)] sm:py-14">
         <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-[70%] -translate-x-1/2 rounded-full bg-[#673de6]/20 blur-[100px]" />
         <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-black to-transparent sm:w-28" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 bg-gradient-to-l from-black to-transparent sm:w-28" />

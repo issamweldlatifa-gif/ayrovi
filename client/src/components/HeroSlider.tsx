@@ -11,8 +11,8 @@ const HERO_IMAGES = [
 
 export const HeroSlider: React.FC = () => {
   return (
-    <section id="home-hero" className="-mt-16 mx-auto w-full max-w-7xl px-4 pb-6 sm:-mt-20 sm:px-6 sm:pb-9 lg:px-8">
-      <div className="relative h-[500px] overflow-hidden rounded-b-[28px] bg-[#24104f] shadow-[0_24px_70px_-28px_rgba(43,18,89,0.65)] sm:h-[600px] sm:rounded-b-[36px] lg:h-[660px]">
+    <section id="home-hero" className="-mt-16 w-full sm:-mt-20">
+      <div className="relative h-[72svh] min-h-[520px] w-full overflow-hidden bg-[#24104f] shadow-[0_28px_70px_-32px_rgba(43,18,89,0.7)] sm:min-h-[620px] lg:min-h-[680px] lg:max-h-[860px]">
         <div className="absolute inset-0 grid grid-cols-[0.9fr_0.9fr_1.25fr]">
           {HERO_IMAGES.map((image) => (
             <div key={image.alt} className="relative min-w-0 overflow-hidden">
