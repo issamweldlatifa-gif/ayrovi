@@ -58,7 +58,7 @@ export const App: React.FC = () => {
   const handleExtracted = (product: ScrapedProduct) => {
     setExtractedProduct(product);
     setErrorMessage(null);
-    window.scrollTo({ top: 400, behavior: 'smooth' });
+    window.scrollTo({ top: 380, behavior: 'smooth' });
   };
 
   const handleError = (msg: string) => {
@@ -120,39 +120,39 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between text-slate-100 selection:bg-brand-500 selection:text-white">
-      {/* Sticky Modern Navbar */}
+    <div className="min-h-screen flex flex-col justify-between text-slate-100 selection:bg-[#673de6] selection:text-white">
+      {/* Navbar */}
       <Navbar
         cartCount={totalCartCount}
         cartTotal={totalCartTND}
         onOpenCart={() => setIsCartOpen(true)}
       />
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-6 sm:space-y-8 flex-1">
         
         {/* Hero Section */}
         <Hero />
 
-        {/* Global Error Banner if any */}
+        {/* Global Error Banner */}
         {errorMessage && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl flex items-center justify-between text-xs sm:text-sm font-semibold max-w-2xl mx-auto shadow-sm">
+          <div className="bg-red-500/15 border border-red-500/30 text-red-300 p-4 rounded-2xl flex items-center justify-between text-xs sm:text-sm font-semibold max-w-2xl mx-auto shadow-sm">
             <div className="flex items-center gap-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{errorMessage}</span>
             </div>
             <button
               onClick={() => setErrorMessage(null)}
-              className="text-red-400 hover:text-white text-xs px-2 py-1"
+              className="text-red-300 hover:text-white text-xs px-2 py-1"
             >
               ✕
             </button>
           </div>
         )}
 
-        {/* Extraction Modes Tab Switcher */}
+        {/* Extraction Tabs Switcher */}
         <div className="max-w-xl mx-auto">
-          <div className="bg-slate-900/90 border border-slate-800 p-1.5 rounded-2xl grid grid-cols-2 gap-1.5 shadow-md">
+          <div className="bg-[#140c2b] border border-[#332266] p-1.5 rounded-2xl grid grid-cols-2 gap-1.5 shadow-md">
             <button
               onClick={() => {
                 setActiveTab('screenshot');
@@ -160,12 +160,12 @@ export const App: React.FC = () => {
               }}
               className={`py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 ${
                 activeTab === 'screenshot'
-                  ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  ? 'hostinger-btn text-white shadow-md shadow-[#673de6]/25'
+                  : 'text-slate-400 hover:text-white hover:bg-[#1f143d]/60'
               }`}
             >
               <Camera className="w-4 h-4" />
-              <span>رفع لقطة شاشة (Screenshot)</span>
+              <span>Capture d'écran (Screenshot)</span>
             </button>
 
             <button
@@ -175,17 +175,17 @@ export const App: React.FC = () => {
               }}
               className={`py-3 px-4 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-200 ${
                 activeTab === 'link'
-                  ? 'bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-md shadow-brand-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  ? 'hostinger-btn text-white shadow-md shadow-[#673de6]/25'
+                  : 'text-slate-400 hover:text-white hover:bg-[#1f143d]/60'
               }`}
             >
               <Link2 className="w-4 h-4" />
-              <span>لصق الرابط المباشر</span>
+              <span>Lien Direct</span>
             </button>
           </div>
         </div>
 
-        {/* Active Extraction Input Zone */}
+        {/* Input Zone */}
         <div className="max-w-2xl mx-auto">
           {activeTab === 'screenshot' ? (
             <ScreenshotUploader
@@ -200,7 +200,7 @@ export const App: React.FC = () => {
           )}
         </div>
 
-        {/* Extracted Product Result Section */}
+        {/* Extracted Product Result */}
         {extractedProduct && (
           <div id="product-card-section" className="pt-4 max-w-3xl mx-auto">
             <ProductCard

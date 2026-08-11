@@ -3,18 +3,22 @@
 @layer base {
   :root {
     color-scheme: dark;
+    --hostinger-purple: #673de6;
+    --hostinger-purple-hover: #5025d1;
+    --hostinger-purple-light: #7e57ff;
+    --hostinger-purple-dark: #0c081a;
   }
 
   body {
     margin: 0;
     padding: 0;
-    background-color: #080d1a;
+    background-color: #0c081a;
     background-image: 
-      radial-gradient(at 0% 0%, rgba(249, 95, 54, 0.08) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
-      radial-gradient(at 50% 100%, rgba(249, 95, 54, 0.04) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, rgba(103, 61, 230, 0.18) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(126, 87, 255, 0.12) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, rgba(103, 61, 230, 0.08) 0px, transparent 50%);
     background-attachment: fixed;
-    font-family: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
 
@@ -25,30 +29,40 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0f19;
+  background: #0c081a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #281a4e;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #f95f36;
+  background: #673de6;
 }
 
-/* Glassmorphism Classes */
+/* Hostinger Purple Glassmorphism */
 .glass-panel {
-  background: rgba(17, 24, 39, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(22, 14, 46, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(103, 61, 230, 0.2);
 }
 
 .glass-panel-glow {
-  background: rgba(17, 24, 39, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(249, 95, 54, 0.25);
-  box-shadow: 0 0 25px -5px rgba(249, 95, 54, 0.15);
+  background: rgba(24, 15, 52, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(126, 87, 255, 0.3);
+  box-shadow: 0 0 30px -5px rgba(103, 61, 230, 0.25);
+}
+
+.hostinger-btn {
+  background: linear-gradient(135deg, #673de6 0%, #7e57ff 100%);
+  transition: all 0.2s ease-in-out;
+}
+
+.hostinger-btn:hover {
+  background: linear-gradient(135deg, #5025d1 0%, #673de6 100%);
+  box-shadow: 0 0 20px rgba(103, 61, 230, 0.4);
 }
