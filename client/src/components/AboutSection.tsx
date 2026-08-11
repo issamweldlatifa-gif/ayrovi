@@ -34,52 +34,47 @@ const BENEFITS = [
 
 export const AboutSection: React.FC = () => {
   return (
-    <section
-      className="relative isolate overflow-clip bg-[#edf9ff]"
-      aria-labelledby="why-ayrovi-title"
-    >
-      {/* A pinned, doubled image keeps the full section covered while every block scrolls over it. */}
-      <div className="sticky top-0 h-[100svh] overflow-hidden" aria-hidden="true">
-        <img
-          src={aboutParallaxImage}
-          alt=""
-          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-25 blur-2xl"
-        />
-        <div className="absolute inset-0 bg-white/25" />
-        <img
-          src={aboutParallaxImage}
-          alt=""
-          className="absolute inset-0 h-full w-full object-contain object-center sm:object-left"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-[#081426]/35 sm:bg-gradient-to-r sm:from-transparent sm:via-white/15 sm:to-[#f8fcff]/95" />
-        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/75 to-transparent" />
-      </div>
-
-      <div className="relative z-10 -mt-[100svh] w-full px-4 sm:px-6 lg:px-8">
-        {/* Intro occupies its own parallax screen. */}
-        <header className="flex min-h-[92svh] items-end justify-center pb-20 pt-28 sm:justify-end sm:pb-24">
-          <div className="w-full rounded-[30px] border border-white/80 bg-white/90 px-6 py-8 text-center shadow-[0_32px_90px_-30px_rgba(23,83,119,0.42)] backdrop-blur-xl sm:max-w-[620px] sm:rounded-[38px] sm:px-10 sm:py-10 lg:px-12">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-[#673de6]/20 bg-[#673de6]/10 px-3.5 py-1 text-[11px] font-bold text-[#673de6] shadow-sm sm:text-xs">
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>Pourquoi choisir AYROVI ?</span>
-            </div>
-            <h2
-              id="why-ayrovi-title"
-              className="mt-4 text-2xl font-extrabold leading-tight tracking-tight text-[#1d2130] sm:text-4xl"
-            >
-              La simplicité d’un achat local pour vos marques mondiales
-            </h2>
-            <p className="mx-auto mt-4 max-w-lg text-sm font-medium leading-7 text-[#697180] sm:text-base">
-              Plus besoin de carte bancaire internationale ni de formalités douanières complexes.
-              AYROVI s’occupe de l’importation de A à Z.
-            </p>
+    <section className="relative bg-white" aria-labelledby="why-ayrovi-title">
+      <header className="px-4 py-20 text-center sm:px-6 sm:py-28 lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-[#673de6]/20 bg-[#673de6]/10 px-3.5 py-1 text-[11px] font-bold text-[#673de6] shadow-sm sm:text-xs">
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>Pourquoi choisir AYROVI ?</span>
           </div>
-        </header>
+          <h2
+            id="why-ayrovi-title"
+            className="mt-5 text-3xl font-extrabold leading-tight tracking-tight text-[#1d2130] sm:text-5xl"
+          >
+            La simplicité d’un achat local pour vos marques mondiales
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl text-sm font-medium leading-7 text-[#697180] sm:text-base">
+            Plus besoin de carte bancaire internationale ni de formalités douanières complexes.
+            AYROVI s’occupe de l’importation de A à Z.
+          </p>
+        </div>
+      </header>
 
-        {/* Each advantage gets an independent screen with intentional breathing room. */}
-        {BENEFITS.map(({ step, title, description, icon: Icon, iconClassName, accentClassName }, index) => (
-          <React.Fragment key={title}>
-            <article className="flex min-h-[92svh] items-center justify-center py-16 sm:justify-end sm:py-20">
+      {/* The supplied portrait is repeated once for each of the three parallax stories. */}
+      {BENEFITS.map(({ step, title, description, icon: Icon, iconClassName, accentClassName }, index) => (
+        <React.Fragment key={title}>
+          <article className="relative isolate min-h-[125svh] overflow-clip bg-[#edf9ff]">
+            <div className="sticky top-0 h-[100svh] overflow-hidden" aria-hidden="true">
+              <img
+                src={aboutParallaxImage}
+                alt=""
+                className="absolute inset-0 h-full w-full scale-110 object-cover opacity-25 blur-2xl"
+              />
+              <div className="absolute inset-0 bg-white/20" />
+              <img
+                src={aboutParallaxImage}
+                alt=""
+                className="absolute inset-0 h-full w-full object-contain object-center sm:object-left"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-[#081426]/35 sm:bg-gradient-to-r sm:from-transparent sm:via-white/15 sm:to-[#f8fcff]/95" />
+              <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/70 to-transparent" />
+            </div>
+
+            <div className="relative z-10 -mt-[100svh] flex min-h-[125svh] w-full items-center px-4 py-20 sm:px-6 lg:px-8">
               <div className="relative w-full overflow-hidden rounded-[30px] border border-white/85 bg-white/85 p-7 shadow-[0_30px_80px_-28px_rgba(12,65,94,0.45)] backdrop-blur-xl transition-[transform,box-shadow,background-color] duration-500 ease-out hover:-translate-y-1 hover:bg-white/90 hover:shadow-[0_38px_90px_-30px_rgba(12,65,94,0.55)] sm:rounded-[36px] sm:p-10 lg:p-14">
                 <div className={`absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r ${accentClassName}`} />
 
@@ -92,39 +87,33 @@ export const AboutSection: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="my-7 h-px w-full bg-gradient-to-r from-[#43b1de]/70 via-[#dfeaf0] to-transparent" />
+                <div className="my-7 h-px w-full bg-gradient-to-r from-[#673de6]/55 via-[#dfeaf0] to-transparent" />
 
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#397a9b]">
+                <p className="text-[10px] font-extrabold uppercase tracking-[0.22em] text-[#673de6]">
                   Avantage AYROVI
                 </p>
-                <h3 className="mt-2 text-2xl font-extrabold tracking-tight text-[#1d2130] sm:text-3xl">
+                <h3 className="mt-2 text-2xl font-extrabold tracking-tight text-[#1d2130] sm:text-3xl lg:text-4xl">
                   {title}
                 </h3>
-                <p className="mt-4 text-sm font-medium leading-7 text-[#697180] sm:text-base sm:leading-8">
+                <p className="mt-4 max-w-3xl text-sm font-medium leading-7 text-[#697180] sm:text-base sm:leading-8">
                   {description}
                 </p>
               </div>
-            </article>
+            </div>
+          </article>
 
-            {index < BENEFITS.length - 1 && (
-              <div className="flex h-[24svh] items-center justify-center sm:h-[30svh]" aria-hidden="true">
-                <div className="flex h-full flex-col items-center gap-3">
-                  <span className="h-2 w-2 rounded-full bg-white shadow-[0_0_0_6px_rgba(67,177,222,0.2)]" />
-                  <span className="w-px flex-1 bg-gradient-to-b from-white/90 via-[#43b1de]/75 to-white/90" />
-                  <span className="h-2 w-2 rounded-full bg-[#43b1de] shadow-[0_0_0_6px_rgba(255,255,255,0.32)]" />
-                </div>
-              </div>
-            )}
-          </React.Fragment>
-        ))}
+          {index < BENEFITS.length - 1 && (
+            <div className="flex h-[22svh] items-center justify-center bg-white" aria-hidden="true">
+              <span className="h-px w-24 bg-gradient-to-r from-transparent via-[#673de6]/40 to-transparent" />
+            </div>
+          )}
+        </React.Fragment>
+      ))}
 
-        <div className="flex min-h-[35svh] items-start justify-center pt-8 text-[10px] font-extrabold uppercase tracking-[0.2em] text-white drop-shadow-md sm:justify-end sm:text-xs">
-          <div className="flex w-full items-center justify-center gap-3 sm:max-w-[560px]">
-            <span className="h-px w-10 bg-white/80" />
-            Simple · Transparent · Local
-            <span className="h-px w-10 bg-white/80" />
-          </div>
-        </div>
+      <div className="flex items-center justify-center gap-3 bg-white px-4 py-16 text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#673de6] sm:text-xs">
+        <span className="h-px w-10 bg-[#fbbf24]" />
+        Simple · Transparent · Local
+        <span className="h-px w-10 bg-[#fbbf24]" />
       </div>
     </section>
   );
